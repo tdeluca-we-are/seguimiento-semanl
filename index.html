@@ -2228,13 +2228,14 @@ function pintarAvisoRespaldo(){
 
 /* ---------- export / import ---------- */
 function exportJSON(){
+  S.ultimoBackup = isoDate(new Date());   // se sella dentro del propio archivo, antes de generarlo
   const blob = new Blob([JSON.stringify(S,null,2)], {type:'application/json'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = 'seguimiento-'+isoDate(new Date())+'.json';
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
-  S.ultimoBackup = isoDate(new Date()); saveNow(); render();
+  saveNow(); render();
   toast('Respaldo descargado — quedó registrado');
 }
 function importFile(input){
@@ -2246,7 +2247,10 @@ function importFile(input){
       if(!d || !d.v) throw new Error('formato');
       if(!confirm('Esto reemplaza todos los datos actuales por los del archivo. ¿Seguir?')) return;
       S = d; S.cuentas = S.cuentas||[]; S.personas = S.personas||[]; S.inis = S.inis||[]; S.semanas = S.semanas||{};
+      S.tareas = S.tareas||[]; S.recurrentes = S.recurrentes||[];
       S.personas.forEach(p=>p.objetivos = p.objetivos||[]);
+      // acabás de importar: existe un archivo de respaldo, no hay que avisar de cero
+      if(!S.ultimoBackup) S.ultimoBackup = isoDate(new Date());
       saveNow(); render(); toast('Respaldo importado');
     }catch(e){ toast('Archivo inválido'); }
   };
