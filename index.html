@@ -2472,8 +2472,10 @@ function arrancar(){
     try{ localStorage.setItem(LS_META, JSON.stringify(Object.assign(leerMeta(), {mail:MAIL}))); }catch(e){}
     sb.from('seg_estado').select('datos,version').eq('user_id', UID).maybeSingle().then(function(r){
       if(r.error){
-        errAuth('Entraste, pero no pude leer tus datos: '+r.error.message+
-          (/relation|does not exist/i.test(r.error.message) ? ' — ¿corriste seguimiento-schema.sql?' : ''));
+        const faltaTabla = r.error.code === 'PGRST205' || /could not find the table|relation .* does not exist/i.test(r.error.message||'');
+        errAuth(faltaTabla
+          ? 'Falta crear la tabla en Supabase: corré seguimiento-schema.sql en el SQL editor y volvé a entrar.'
+          : 'Entraste, pero no pude leer tus datos: '+r.error.message);
         mostrarLogin();
         return;
       }
