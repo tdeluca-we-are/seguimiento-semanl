@@ -281,7 +281,9 @@ select.inp{cursor:pointer}
 .tarea:last-child{border-bottom:none}
 .tarea-top{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
 .tarea-tit{flex:1;min-width:180px;font-weight:600}
-.tarea-desc{padding-left:26px;margin-top:7px}
+.tarea-desc{padding-left:28px;margin-top:7px}
+.tarea-nota{padding-left:28px;margin-top:5px;font-size:12.5px;color:var(--text2);line-height:1.5;cursor:text;max-width:900px}
+.tarea-nota:hover{color:var(--text)}
 .tarea.hecha{opacity:.5}
 .tarea.hecha .tarea-tit{text-decoration:line-through}
 
@@ -525,6 +527,7 @@ let cur = wkKey(new Date());
 let openCta = null;
 let fProy = 'todos', fCta = 'todas', fCel = 'todas', qCta = '', hmView = 'cuentas';
 let fTar = 'pend', fTarMarca = 'todas';
+let tarDescOpen = {}, ntDescOpen = false;
 let vizOpen = true, vizTabla = false;
 let descOpen = {}, temaOpen = {};
 
@@ -1399,9 +1402,12 @@ function vTareas(){
       '<input class="inp" id="nt-marca" list="dl-marcas" style="flex:0 0 180px" placeholder="Marca">'+
       '<input class="inp" id="nt-titulo" placeholder="Tarea — qué hay que hacer" onkeydown="if(event.key===\'Enter\')addTarea()">'+
       '<input class="inp" id="nt-fecha" type="date" style="flex:0 0 155px">'+
+      '<button class="btn-orange" onclick="addTarea()">Agregar</button>'+
     '</div>'+
-    '<textarea class="inp" id="nt-desc" style="margin-top:8px;min-height:44px" placeholder="Descripción (opcional)"></textarea>'+
-    '<button class="btn-orange" style="margin-top:8px" onclick="addTarea()">Agregar tarea</button></div>';
+    (ntDescOpen
+      ? '<textarea class="inp" id="nt-desc" style="margin-top:8px;min-height:44px" placeholder="Descripción (opcional)"></textarea>'
+      : '<button class="btn-ghost" style="margin-top:8px" onclick="toggleAltaDesc()">+ Descripción</button>')+
+    '</div>';
 
   let lista = todas.filter(t=>{
     const m = (t.marca||'').trim();
@@ -1443,6 +1449,7 @@ function vTareas(){
     g.items.forEach(t=>{
       const vencida = !t.hecha && t.fecha && t.fecha < hoy;
       const esHoy = !t.hecha && t.fecha === hoy;
+      const abierta = !!tarDescOpen[t.id], conDesc = !!toText(t.desc);
       h += '<div class="tarea'+(t.hecha?' hecha':'')+'">'+
         '<div class="tarea-top">'+
           '<input type="checkbox" class="chk" '+(t.hecha?'checked':'')+' onchange="toggleTarea(\''+t.id+'\')" title="Marcar como hecha">'+
@@ -1451,12 +1458,20 @@ function vTareas(){
           '<input class="inp" type="date" style="flex:0 0 150px" value="'+esc(t.fecha||'')+'" oninput="setTarea(\''+t.id+'\',\'fecha\',this.value)">'+
           (vencida ? '<span class="pill late">venció</span>' : (esHoy ? '<span class="pill" style="background:rgba(240,78,35,.15);color:#f4795a;border-color:rgba(240,78,35,.3)">hoy</span>' : ''))+
           (t.recId ? '<span class="pill" title="Se repite sola">&#8635;</span>' : '')+
+          '<button class="btn-ghost" onclick="toggleTarDesc(\''+t.id+'\')" title="'+
+            (conDesc?'Ver o editar la descripción':'Agregar una descripción')+'">'+
+            (abierta ? 'Ocultar' : (conDesc ? '&#9998; nota' : '+ nota'))+'</button>'+
           btnAlUno(t.titulo + (t.marca?' ('+t.marca+')':''), toText(t.desc))+
           '<button class="mini" onclick="delTarea(\''+t.id+'\')" title="Borrar">&times;</button>'+
         '</div>'+
-        '<div class="tarea-desc">'+
-          richBox('tar-'+t.id, t.desc, 'setTarea(\''+t.id+'\',\'desc\',richIn(this))', 'Descripción...', 38)+
-        '</div>'+
+        (abierta
+          ? '<div class="tarea-desc">'+
+              richBox('tar-'+t.id, t.desc, 'setTarea(\''+t.id+'\',\'desc\',richIn(this))', 'Descripción…', 38)+
+              '<button class="btn-ghost" style="margin-top:5px" onclick="toggleTarDesc(\''+t.id+'\')">Listo</button>'+
+            '</div>'
+          : (conDesc
+              ? '<div class="tarea-nota" onclick="toggleTarDesc(\''+t.id+'\')" title="Click para editar">'+toHtml(t.desc)+'</div>'
+              : ''))+
       '</div>';
     });
   });
@@ -1832,14 +1847,18 @@ function setRecTexto(id,f,v){ const r = S.recurrentes.find(x=>x.id===id); if(r){
 function addTarea(){
   const tit = document.getElementById('nt-titulo').value.trim();
   if(!tit){ toast('Ponele un nombre a la tarea'); return; }
+  const d = document.getElementById('nt-desc');
   S.tareas.push({id:uid(), titulo:tit,
     marca:document.getElementById('nt-marca').value.trim(),
     fecha:document.getElementById('nt-fecha').value,
-    desc:document.getElementById('nt-desc').value.trim(),
+    desc:d ? d.value.trim() : '',
     hecha:false, creada:isoDate(new Date())});
+  ntDescOpen = false;
   saveNow(); render(); toast('Tarea agregada');
 }
 function setTarea(id,f,v){ const t = S.tareas.find(x=>x.id===id); if(t){ t[f] = v; save(); } }
+function toggleTarDesc(id){ tarDescOpen[id] = !tarDescOpen[id]; render(); }
+function toggleAltaDesc(){ ntDescOpen = !ntDescOpen; render(); }
 function toggleTarea(id){
   const t = S.tareas.find(x=>x.id===id);
   if(t){ t.hecha = !t.hecha; t.cerrada = t.hecha ? isoDate(new Date()) : ''; saveNow(); render(); }
