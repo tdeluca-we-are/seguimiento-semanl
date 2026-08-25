@@ -266,17 +266,24 @@ select.inp{cursor:pointer}
 .viz-tabla td.n,.viz-tabla th.n{text-align:right;font-variant-numeric:tabular-nums}
 
 .rec-ico{color:var(--orange);font-size:16px;line-height:1;flex:none}
+/* Color sólido y no un tinte translúcido: el naranja al 16% sobre el navy se
+   mezcla en un marrón que no se despega del fondo. Estos tonos están elegidos
+   para quedar ~1.4 de contraste contra el panel: se ven de lejos sin gritar. */
 .grp-marca{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:13px 18px 12px;
-  background:rgba(240,78,35,.07);
-  border-top:1px solid var(--border);border-bottom:1px solid rgba(255,255,255,.07);
-  box-shadow:inset 3px 0 0 var(--orange)}
+  background:#55301f;
+  border-top:1px solid rgba(240,78,35,.5);border-bottom:1px solid rgba(0,0,0,.25);
+  box-shadow:inset 4px 0 0 var(--orange)}
 .grp-marca .nm{font-size:15px;font-weight:800;letter-spacing:-.015em;color:#fff;line-height:1.2}
 .grp-marca .cnt{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text2);
   background:rgba(255,255,255,.06);border:1px solid var(--border2);padding:3px 9px;border-radius:20px}
 .grp-marca .cnt.venc{background:rgba(239,68,68,.16);border-color:rgba(239,68,68,.4);color:#ef6b6b}
-.grp-marca.sin{box-shadow:inset 3px 0 0 var(--text3);background:rgba(255,255,255,.03)}
+.grp-marca.sin{box-shadow:inset 4px 0 0 var(--text3);background:#1e2c47;
+  border-top-color:rgba(255,255,255,.16)}
 .grp-marca.sin .nm{color:var(--text2);font-weight:700;font-size:13.5px}
-.grp-marca.lider{box-shadow:inset 3px 0 0 var(--blue);background:rgba(122,158,202,.09)}
+.grp-marca.lider{box-shadow:inset 4px 0 0 var(--blue);background:#22406b;
+  border-top-color:rgba(122,158,202,.5)}
+.grp-marca .cnt{background:rgba(0,0,0,.22);border-color:rgba(255,255,255,.16);color:rgba(255,255,255,.8)}
+.grp-marca .grp-cel{color:rgba(255,255,255,.5)}
 .grp-cel{font-size:10.5px;color:var(--text3);font-weight:600}
 .filtros-tar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;padding:10px 18px;border-bottom:1px solid var(--border)}
 .flt-lbl{font-size:9.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em}
