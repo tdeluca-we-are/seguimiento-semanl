@@ -276,6 +276,15 @@ select.inp{cursor:pointer}
 .grp-marca .cnt.venc{background:rgba(239,68,68,.16);border-color:rgba(239,68,68,.4);color:#ef6b6b}
 .grp-marca.sin{box-shadow:inset 3px 0 0 var(--text3);background:rgba(255,255,255,.02)}
 .grp-marca.sin .nm{color:var(--text2);font-weight:700;font-size:13.5px}
+.grp-marca.lider{box-shadow:inset 3px 0 0 var(--blue);
+  background:linear-gradient(90deg,rgba(122,158,202,.16),rgba(122,158,202,.03) 45%,transparent 70%)}
+.grp-cel{font-size:10.5px;color:var(--text3);font-weight:600}
+.filtros-tar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;padding:10px 18px;border-bottom:1px solid var(--border)}
+.flt-lbl{font-size:9.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em}
+.tipo-btn{flex:none;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:5px 10px;
+  border-radius:20px;cursor:pointer;background:rgba(255,255,255,.05);color:var(--text3);border:1px solid var(--border2)}
+.tipo-btn:hover{border-color:var(--orange);color:var(--orange)}
+.tipo-btn.lid{background:rgba(122,158,202,.16);color:var(--blue);border-color:rgba(122,158,202,.4)}
 
 .tarea{padding:11px 18px;border-bottom:1px solid rgba(255,255,255,.06)}
 .tarea:last-child{border-bottom:none}
@@ -526,8 +535,8 @@ let tab = 'resumen';
 let cur = wkKey(new Date());
 let openCta = null;
 let fProy = 'todos', fCta = 'todas', fCel = 'todas', qCta = '', hmView = 'cuentas';
-let fTar = 'pend', fTarMarca = 'todas';
-let tarDescOpen = {}, ntDescOpen = false;
+let fTar = 'pend', fTarMarca = 'todas', fTarCel = 'todas', fTarTipo = 'todos';
+let tarDescOpen = {}, ntDescOpen = false, ntTipo = 'marca';
 let vizOpen = true, vizTabla = false;
 let descOpen = {}, temaOpen = {};
 
@@ -541,6 +550,19 @@ function normalizar(raw){
   raw.inis = raw.inis || []; raw.semanas = raw.semanas || {};
   raw.tareas = raw.tareas || []; raw.recurrentes = raw.recurrentes || [];
   raw.personas.forEach(p => p.objetivos = p.objetivos || []);
+  // Antes no existía el tipo de tarea y "Líder" se cargaba como si fuera una marca.
+  // Al abrir por primera vez la versión nueva, esas pasan a ser tareas de líder.
+  const esLider = m => /^\s*l[ií]der(es)?\s*$/i.test(m || '');
+  raw.tareas.forEach(t=>{
+    if(t.tipo) return;
+    t.tipo = esLider(t.marca) ? 'lider' : 'marca';
+    if(t.tipo === 'lider') t.marca = '';
+  });
+  raw.recurrentes.forEach(r=>{
+    if(r.tipo) return;
+    r.tipo = esLider(r.marca) ? 'lider' : 'marca';
+    if(r.tipo === 'lider') r.marca = '';
+  });
   // los temas viejos no tenían id: se los asignamos para poder abrirles las notas
   Object.keys(raw.semanas).forEach(k=>{
     (raw.semanas[k].temas || []).forEach(t=>{
@@ -1375,6 +1397,12 @@ function marcasDisponibles(){
   (S.tareas||[]).forEach(t=>{ const m = (t.marca||'').trim(); if(m && !set.includes(m)) set.push(m); });
   return set.sort((a,b)=>a.localeCompare(b,'es'));
 }
+// la célula de una tarea sale de la cuenta que se llama igual que su marca
+function celulaDeMarca(nombre){
+  const c = S.cuentas.find(x=>x.nombre === (nombre||'').trim());
+  return c ? celulaDe(c) : '';
+}
+const esLiderT = t => (t.tipo || 'marca') === 'lider';
 function vTareas(){
   const hoy = isoDate(new Date());
   const todas = S.tareas || [];
@@ -1386,9 +1414,16 @@ function vTareas(){
   h += '<div class="section"><div class="section-hdr">'+
     '<div class="section-title"><span class="dot"></span>Mis tareas <span class="pill" style="margin-left:4px">privado</span></div>'+
     '<div style="display:flex;gap:6px;flex-wrap:wrap">'+
-      selFiltro('fTarMarca', fTarMarca, [['todas','Todas las marcas']].concat(marcasDisponibles().map(m=>[m,m])).concat([['_sin','Sin marca']]))+
       selFiltro('fTar', fTar, [['pend','Pendientes'],['todas','Todas'],['venc','Vencidas'],['hechas','Hechas']])+
     '</div></div>'+
+    '<div class="section-body filtros-tar">'+
+      '<span class="flt-lbl">Filtrar por</span>'+
+      selFiltro('fTarTipo', fTarTipo, [['todos','Marca y líder'],['marca','Solo de marca'],['lider','Solo de líder']])+
+      selFiltro('fTarCel', fTarCel, [['todas','Todas las células']].concat(celulas().map(c=>[c,c])))+
+      selFiltro('fTarMarca', fTarMarca, [['todas','Todas las marcas']].concat(marcasDisponibles().map(m=>[m,m])).concat([['_sin','Sin marca']]))+
+      ((fTarTipo!=='todos'||fTarCel!=='todas'||fTarMarca!=='todas')
+        ? '<button class="btn-ghost" onclick="fTarTipo=\'todos\';fTarCel=\'todas\';fTarMarca=\'todas\';render()">Limpiar</button>' : '')+
+    '</div>'+
     '<div class="section-body" style="padding:11px 18px;border-bottom:1px solid var(--border)">'+
       '<div class="hint">Tu lista de pendientes del día a día. <b style="color:var(--text2)">No entra en el reporte del 1:1</b> ni en nada que compartas.'+
       (todas.length ? ' &nbsp;·&nbsp; <b style="color:var(--text2)">'+pend+'</b> pendientes'+
@@ -1399,7 +1434,11 @@ function vTareas(){
   h += '<div class="add-ini no-print"><div class="add-ini-hdr">Nueva tarea</div>'+
     '<datalist id="dl-marcas">'+marcasDisponibles().map(m=>'<option value="'+esc(m)+'">').join('')+'</datalist>'+
     '<div class="cfg-add" style="margin-top:0">'+
-      '<input class="inp" id="nt-marca" list="dl-marcas" style="flex:0 0 180px" placeholder="Marca">'+
+      '<select class="inp" id="nt-tipo" style="flex:0 0 110px" onchange="ntTipo=this.value;render()">'+
+        '<option value="marca"'+(ntTipo==='marca'?' selected':'')+'>De marca</option>'+
+        '<option value="lider"'+(ntTipo==='lider'?' selected':'')+'>De líder</option></select>'+
+      (ntTipo === 'lider' ? ''
+        : '<input class="inp" id="nt-marca" list="dl-marcas" style="flex:0 0 170px" placeholder="Marca">')+
       '<input class="inp" id="nt-titulo" placeholder="Tarea — qué hay que hacer" onkeydown="if(event.key===\'Enter\')addTarea()">'+
       '<input class="inp" id="nt-fecha" type="date" style="flex:0 0 155px">'+
       '<button class="btn-orange" onclick="addTarea()">Agregar</button>'+
@@ -1411,6 +1450,8 @@ function vTareas(){
 
   let lista = todas.filter(t=>{
     const m = (t.marca||'').trim();
+    if(fTarTipo !== 'todos' && (esLiderT(t) ? 'lider' : 'marca') !== fTarTipo) return false;
+    if(fTarCel !== 'todas' && celulaDeMarca(m) !== fTarCel) return false;   // las de líder no tienen célula
     if(fTarMarca === '_sin' && m) return false;
     if(fTarMarca !== 'todas' && fTarMarca !== '_sin' && m !== fTarMarca) return false;
     if(fTar === 'pend') return !t.hecha;
@@ -1424,14 +1465,16 @@ function vTareas(){
   }
 
   // agrupadas por marca; dentro, las que tienen fecha primero y más próxima arriba
+  const LIDER = 'Tareas de líder', SINM = '— Sin marca';
   const grupos = [];
   lista.forEach(t=>{
-    const m = (t.marca||'').trim() || '— Sin marca';
+    const m = esLiderT(t) ? LIDER : ((t.marca||'').trim() || SINM);
     let g = grupos.find(x=>x.m === m);
-    if(!g){ g = {m:m, items:[]}; grupos.push(g); }
+    if(!g){ g = {m:m, items:[], cel:esLiderT(t) ? '' : celulaDeMarca(t.marca)}; grupos.push(g); }
     g.items.push(t);
   });
-  grupos.sort((a,b)=> a.m === '— Sin marca' ? 1 : (b.m === '— Sin marca' ? -1 : a.m.localeCompare(b.m,'es')));
+  const orden = m => m === LIDER ? 0 : (m === SINM ? 2 : 1);
+  grupos.sort((a,b)=> orden(a.m) - orden(b.m) || a.m.localeCompare(b.m,'es'));
   grupos.forEach(g=> g.items.sort((a,b)=>
     (a.hecha?1:0)-(b.hecha?1:0) || (a.fecha?0:1)-(b.fecha?0:1) || String(a.fecha||'').localeCompare(String(b.fecha||''))
   ));
@@ -1440,9 +1483,10 @@ function vTareas(){
   grupos.forEach(g=>{
     const pendG = g.items.filter(t=>!t.hecha).length;
     const vencG = g.items.filter(t=>!t.hecha && t.fecha && t.fecha < hoy).length;
-    const sinMarca = g.m === '— Sin marca';
-    h += '<div class="grp-marca'+(sinMarca?' sin':'')+'">'+
+    const sinMarca = g.m === SINM, esLid = g.m === LIDER;
+    h += '<div class="grp-marca'+(sinMarca?' sin':'')+(esLid?' lider':'')+'">'+
       '<span class="nm">'+esc(g.m)+'</span>'+
+      (g.cel ? '<span class="grp-cel">'+esc(g.cel)+'</span>' : '')+
       '<span class="cnt">'+pendG+' pendiente'+(pendG===1?'':'s')+'</span>'+
       (vencG ? '<span class="cnt venc">'+vencG+' vencida'+(vencG===1?'':'s')+'</span>' : '')+
       '</div>';
@@ -1454,7 +1498,11 @@ function vTareas(){
         '<div class="tarea-top">'+
           '<input type="checkbox" class="chk" '+(t.hecha?'checked':'')+' onchange="toggleTarea(\''+t.id+'\')" title="Marcar como hecha">'+
           '<input class="inp tarea-tit" value="'+esc(t.titulo)+'" placeholder="Tarea" oninput="setTarea(\''+t.id+'\',\'titulo\',this.value)">'+
-          '<input class="inp" list="dl-marcas" style="flex:0 0 160px" value="'+esc(t.marca||'')+'" placeholder="Marca" oninput="setTarea(\''+t.id+'\',\'marca\',this.value)">'+
+          '<button class="tipo-btn'+(esLiderT(t)?' lid':'')+'" onclick="cambiarTipoTarea(\''+t.id+'\')" '+
+            'title="'+(esLiderT(t)?'Es una tarea de líder — click para pasarla a una marca':'Es una tarea de marca — click para pasarla a líder')+'">'+
+            (esLiderT(t)?'Líder':'Marca')+'</button>'+
+          (esLiderT(t) ? ''
+            : '<input class="inp" list="dl-marcas" style="flex:0 0 150px" value="'+esc(t.marca||'')+'" placeholder="Marca" oninput="setTarea(\''+t.id+'\',\'marca\',this.value)">')+
           '<input class="inp" type="date" style="flex:0 0 150px" value="'+esc(t.fecha||'')+'" oninput="setTarea(\''+t.id+'\',\'fecha\',this.value)">'+
           (vencida ? '<span class="pill late">venció</span>' : (esHoy ? '<span class="pill" style="background:rgba(240,78,35,.15);color:#f4795a;border-color:rgba(240,78,35,.3)">hoy</span>' : ''))+
           (t.recId ? '<span class="pill" title="Se repite sola">&#8635;</span>' : '')+
@@ -1782,8 +1830,8 @@ function generarRecurrentes(){
     // si quedó una pendiente de días anteriores, la corremos a hoy en vez de duplicarla
     const pendiente = S.tareas.find(t=>t.recId === r.id && !t.hecha);
     if(pendiente) pendiente.fecha = hoy;
-    else S.tareas.push({id:uid(), titulo:r.titulo, marca:r.marca||'', fecha:hoy,
-      desc:r.desc||'', hecha:false, recId:r.id, creada:hoy});
+    else S.tareas.push({id:uid(), titulo:r.titulo, tipo:r.tipo || (r.marca?'marca':'lider'),
+      marca:r.marca||'', fecha:hoy, desc:r.desc||'', hecha:false, recId:r.id, creada:hoy});
     r.ultimaGen = hoy; cambio = true;
   });
   if(cambio) saveNow();
@@ -1791,8 +1839,10 @@ function generarRecurrentes(){
 function addRec(){
   const t = document.getElementById('nr-titulo').value.trim();
   if(!t){ toast('Ponele un nombre'); return; }
+  const mr = document.getElementById('nr-marca').value.trim();
   S.recurrentes.push({id:uid(), titulo:t,
-    marca:document.getElementById('nr-marca').value.trim(),
+    tipo: mr ? 'marca' : 'lider',        // sin marca, es una rutina propia
+    marca:mr,
     freq:document.getElementById('nr-freq').value,
     dia:document.getElementById('nr-dia').value || 1,
     desc:'', activa:true, ultimaGen:''});
@@ -1847,9 +1897,9 @@ function setRecTexto(id,f,v){ const r = S.recurrentes.find(x=>x.id===id); if(r){
 function addTarea(){
   const tit = document.getElementById('nt-titulo').value.trim();
   if(!tit){ toast('Ponele un nombre a la tarea'); return; }
-  const d = document.getElementById('nt-desc');
-  S.tareas.push({id:uid(), titulo:tit,
-    marca:document.getElementById('nt-marca').value.trim(),
+  const d = document.getElementById('nt-desc'), m = document.getElementById('nt-marca');
+  S.tareas.push({id:uid(), titulo:tit, tipo:ntTipo,
+    marca:(ntTipo === 'lider' || !m) ? '' : m.value.trim(),
     fecha:document.getElementById('nt-fecha').value,
     desc:d ? d.value.trim() : '',
     hecha:false, creada:isoDate(new Date())});
@@ -1858,6 +1908,17 @@ function addTarea(){
 }
 function setTarea(id,f,v){ const t = S.tareas.find(x=>x.id===id); if(t){ t[f] = v; save(); } }
 function toggleTarDesc(id){ tarDescOpen[id] = !tarDescOpen[id]; render(); }
+function cambiarTipoTarea(id){
+  const t = S.tareas.find(x=>x.id===id); if(!t) return;
+  if(esLiderT(t)){
+    t.tipo = 'marca';
+    if(!t.marca && t.marcaPrev){ t.marca = t.marcaPrev; delete t.marcaPrev; }  // la recupera si venía de una
+  } else {
+    t.tipo = 'lider';
+    if(t.marca){ t.marcaPrev = t.marca; t.marca = ''; }   // no cuelga de ninguna marca, pero la recordamos
+  }
+  saveNow(); render();
+}
 function toggleAltaDesc(){ ntDescOpen = !ntDescOpen; render(); }
 function toggleTarea(id){
   const t = S.tareas.find(x=>x.id===id);
