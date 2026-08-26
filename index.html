@@ -257,14 +257,17 @@ select.inp{cursor:pointer}
 .tr-der{display:flex;align-items:center;gap:6px;flex:none;padding-top:3px}
 
 /* fecha como palabra, no como campo */
-.fch{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;cursor:pointer;white-space:nowrap;
-  border:1px solid var(--border2);background:rgba(255,255,255,.04);color:var(--text2);min-width:74px;text-align:center}
-.fch:hover{border-color:var(--orange);color:var(--orange)}
-.fch.roja{background:rgba(239,68,68,.16);border-color:rgba(239,68,68,.45);color:#ff8080}
-.fch.naranja{background:rgba(240,78,35,.18);border-color:rgba(240,78,35,.5);color:#ff9270}
-.fch.prox{color:var(--text);border-color:var(--border)}
-.fch.vacia{border-style:dashed;color:var(--text3);font-weight:600}
-.fch.list{background:transparent;border-color:transparent;color:var(--text3)}
+/* El color vive en el texto y en un borde fino; el relleno se mantiene casi
+   neutro para que la fila no se llene de manchas. */
+.fch{font-size:11px;font-weight:700;padding:4px 11px;border-radius:20px;cursor:pointer;white-space:nowrap;
+  border:1px solid var(--border2);background:rgba(255,255,255,.035);color:var(--text2);min-width:78px;text-align:center;
+  transition:border-color .12s,color .12s}
+.fch:hover{border-color:rgba(255,255,255,.35);color:var(--text)}
+.fch.roja{border-color:rgba(239,68,68,.5);color:#ff8f8f;background:rgba(239,68,68,.08)}
+.fch.naranja{border-color:rgba(240,78,35,.55);color:#ffa584;background:rgba(240,78,35,.08)}
+.fch.prox{color:var(--text);border-color:rgba(255,255,255,.2)}
+.fch.vacia{border-style:dashed;border-color:rgba(255,255,255,.18);color:var(--text2);font-weight:600;background:none}
+.fch.list{background:none;border-color:transparent;color:var(--text3);font-weight:600}
 .fechas{display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding:8px 18px 12px 62px;background:rgba(0,0,0,.16)}
 .fechas button{font-size:11.5px;font-weight:600;padding:6px 12px;border-radius:20px;cursor:pointer;
   background:var(--bg3);color:var(--text2);border:1px solid var(--border2)}
@@ -318,24 +321,23 @@ select.inp{cursor:pointer}
 .viz-tabla td.n,.viz-tabla th.n{text-align:right;font-variant-numeric:tabular-nums}
 
 .rec-ico{color:var(--orange);font-size:16px;line-height:1;flex:none}
-/* Color sólido y no un tinte translúcido: el naranja al 16% sobre el navy se
-   mezcla en un marrón que no se despega del fondo. Estos tonos están elegidos
-   para quedar ~1.4 de contraste contra el panel: se ven de lejos sin gritar. */
-.grp-marca{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:13px 18px 12px;
-  background:#55301f;
-  border-top:1px solid rgba(240,78,35,.5);border-bottom:1px solid rgba(0,0,0,.25);
-  box-shadow:inset 4px 0 0 var(--orange)}
-.grp-marca .nm{font-size:15px;font-weight:800;letter-spacing:-.015em;color:#fff;line-height:1.2}
-.grp-marca .cnt{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text2);
-  background:rgba(255,255,255,.06);border:1px solid var(--border2);padding:3px 9px;border-radius:20px}
-.grp-marca .cnt.venc{background:rgba(239,68,68,.16);border-color:rgba(239,68,68,.4);color:#ef6b6b}
-.grp-marca.sin{box-shadow:inset 4px 0 0 var(--text3);background:#1e2c47;
-  border-top-color:rgba(255,255,255,.16)}
-.grp-marca.sin .nm{color:var(--text2);font-weight:700;font-size:13.5px}
-.grp-marca.lider{box-shadow:inset 4px 0 0 var(--blue);background:#22406b;
-  border-top-color:rgba(122,158,202,.5)}
-.grp-marca .cnt{background:rgba(0,0,0,.22);border-color:rgba(255,255,255,.16);color:rgba(255,255,255,.8)}
-.grp-marca .grp-cel{color:rgba(255,255,255,.5)}
+/* La banda se separa por ELEVACIÓN (un navy más claro), no por hue: el naranja
+   como fondo se enturbia contra el azul y ensucia todo. El color queda donde
+   luce — la barra lateral y el contador — sobre una superficie limpia. */
+.grp-marca{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 18px 11px;
+  background:#1f3d66;
+  border-top:1px solid rgba(255,255,255,.09);border-bottom:1px solid rgba(0,0,0,.22);
+  box-shadow:inset 3px 0 0 var(--orange)}
+.grp-marca .nm{font-size:14.5px;font-weight:700;letter-spacing:-.01em;color:#fff;line-height:1.2}
+.grp-marca .cnt{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  color:#ffa584;background:rgba(0,0,0,.22);border:1px solid rgba(240,78,35,.32);padding:3px 9px;border-radius:20px}
+.grp-marca .cnt.venc{background:rgba(239,68,68,.14);border-color:rgba(239,68,68,.45);color:#ff8f8f}
+.grp-marca .grp-cel{font-size:10.5px;font-weight:600;color:rgba(255,255,255,.42)}
+.grp-marca.lider{box-shadow:inset 3px 0 0 var(--blue)}
+.grp-marca.lider .cnt{color:#a8c6e8;border-color:rgba(122,158,202,.4)}
+.grp-marca.sin{box-shadow:inset 3px 0 0 var(--text3);background:#1a3055}
+.grp-marca.sin .nm{color:rgba(255,255,255,.62);font-weight:600;font-size:13.5px}
+.grp-marca.sin .cnt{color:var(--text2);border-color:var(--border2)}
 .grp-cel{font-size:10.5px;color:var(--text3);font-weight:600}
 .filtros-tar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;padding:10px 18px;border-bottom:1px solid var(--border)}
 .flt-lbl{font-size:9.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em}
