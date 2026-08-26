@@ -239,10 +239,13 @@ select.inp{cursor:pointer}
    Los campos son inputs pero se ven como texto hasta que los tocás. El estado
    lo carga el borde izquierdo y la fecha, que se lee en palabras. Todo lo
    secundario (nota, marca, tipo, borrar) vive detrás de un solo desplegable. */
+/* Las filas llevan su propio velo translúcido para despegarse apenas del
+   panel: suficiente para que se lean como bloque, no tanto como para competir
+   con la banda del grupo. */
 .tr{display:flex;align-items:flex-start;gap:11px;padding:10px 18px 10px 15px;border-left:3px solid transparent;
-  border-bottom:1px solid rgba(255,255,255,.05);position:relative}
+  border-bottom:1px solid rgba(255,255,255,.05);position:relative;background:rgba(255,255,255,.035)}
 .tr:last-child{border-bottom:none}
-.tr:hover{background:rgba(255,255,255,.025)}
+.tr:hover{background:rgba(255,255,255,.07)}
 .tr.venc{border-left-color:var(--red)}
 .tr.hoy{border-left-color:var(--orange)}
 .tr.list{opacity:.45}
@@ -326,22 +329,27 @@ select.inp{cursor:pointer}
    croma casi cero, así que contra el navy se lee como "otro material" y no
    como un azul lavado. El color queda para los estados de cada fila, que es
    lo único que de verdad tiene que saltar. */
+/* Naranja translúcido al 55%: sigue leyéndose naranja (por debajo del 45% se
+   mezcla con el navy y se va al marrón) pero baja bastante de intensidad
+   contra el naranja pleno, que tapaba las tareas vencidas de abajo. */
 .grp-marca{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 18px;
-  background:rgba(255,255,255,.1);
-  border-top:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(0,0,0,.28);
+  background:rgba(240,78,35,.55);
+  border-top:1px solid rgba(255,255,255,.14);border-bottom:1px solid rgba(0,0,0,.28);
   box-shadow:inset 3px 0 0 var(--orange)}
 .grp-marca .nm{font-size:14px;font-weight:700;letter-spacing:-.01em;color:#fff;line-height:1.2}
 /* Los contadores dejan de ser cápsulas: dos pastillas gordas por encabezado
    eran la mitad del ruido. Texto suelto, y el rojo solo donde hay algo vencido. */
-/* El naranja vuelve, pero translúcido y en piezas chicas: a este tamaño el
-   color se lee por el texto, así que no alcanza a enturbiarse. */
+/* Sobre la banda naranja, las cápsulas se apoyan en negro translúcido: el
+   blanco sobre naranja se lee, un naranja claro sobre naranja no. */
 .grp-marca .cnt{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
-  color:#ffa584;background:rgba(240,78,35,.16);border:1px solid rgba(240,78,35,.34);
+  color:#fff;background:rgba(0,0,0,.26);border:1px solid rgba(255,255,255,.28);
   padding:3px 9px;border-radius:20px}
-.grp-marca .cnt.venc{color:#ff9090;background:rgba(239,68,68,.15);border-color:rgba(239,68,68,.4)}
-.grp-marca .grp-cel{font-size:10.5px;font-weight:600;color:rgba(255,255,255,.4)}
+.grp-marca .cnt.venc{background:rgba(0,0,0,.42);border-color:rgba(255,255,255,.5)}
+.grp-marca .grp-cel{font-size:10.5px;font-weight:600;color:rgba(255,255,255,.72)}
 /* Las de líder llevan la misma banda: el nombre del grupo ya las distingue. */
-.grp-marca.sin{background:rgba(255,255,255,.05);box-shadow:inset 3px 0 0 var(--text3)}
+.grp-marca.sin{background:rgba(255,255,255,.07);box-shadow:inset 3px 0 0 var(--text3)}
+.grp-marca.sin .cnt{background:rgba(0,0,0,.2);border-color:var(--border2);color:var(--text2)}
+.grp-marca.sin .grp-cel{color:var(--text3)}
 .grp-marca.sin .nm{color:rgba(255,255,255,.66);font-weight:600;font-size:13.5px}
 .grp-cel{font-size:10.5px;color:var(--text3);font-weight:600}
 .filtros-tar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;padding:10px 18px;border-bottom:1px solid var(--border)}
