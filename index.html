@@ -321,30 +321,30 @@ select.inp{cursor:pointer}
 .viz-tabla td.n,.viz-tabla th.n{text-align:right;font-variant-numeric:tabular-nums}
 
 .rec-ico{color:var(--orange);font-size:16px;line-height:1;flex:none}
-/* La banda se separa por ELEVACIÓN (un navy más claro), no por hue: el naranja
-   como fondo se enturbia contra el azul y ensucia todo. El color queda donde
-   luce — la barra lateral y el contador — sobre una superficie limpia. */
+/* Naranja pleno, no translúcido: el problema anterior era mezclarlo con el navy.
+   Va el tono profundo (#d43d16) y no el brillante, porque con el brillante el
+   texto blanco queda en 3.6:1 — acá da 4.7:1 y se lee limpio. */
 .grp-marca{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 18px 11px;
-  background:#1f3d66;
-  border-top:1px solid rgba(255,255,255,.09);border-bottom:1px solid rgba(0,0,0,.22);
-  box-shadow:inset 3px 0 0 var(--orange)}
+  background:var(--orange2);
+  border-top:1px solid rgba(255,255,255,.18);border-bottom:1px solid rgba(0,0,0,.3)}
 .grp-marca .nm{font-size:14.5px;font-weight:700;letter-spacing:-.01em;color:#fff;line-height:1.2}
 .grp-marca .cnt{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
-  color:#ffa584;background:rgba(0,0,0,.22);border:1px solid rgba(240,78,35,.32);padding:3px 9px;border-radius:20px}
-.grp-marca .cnt.venc{background:rgba(239,68,68,.14);border-color:rgba(239,68,68,.45);color:#ff8f8f}
-.grp-marca .grp-cel{font-size:10.5px;font-weight:600;color:rgba(255,255,255,.42)}
-.grp-marca.lider{box-shadow:inset 3px 0 0 var(--blue)}
-.grp-marca.lider .cnt{color:#a8c6e8;border-color:rgba(122,158,202,.4)}
-.grp-marca.sin{box-shadow:inset 3px 0 0 var(--text3);background:#1a3055}
-.grp-marca.sin .nm{color:rgba(255,255,255,.62);font-weight:600;font-size:13.5px}
-.grp-marca.sin .cnt{color:var(--text2);border-color:var(--border2)}
+  color:#fff;background:rgba(0,0,0,.26);border:1px solid rgba(255,255,255,.3);padding:3px 9px;border-radius:20px}
+.grp-marca .cnt.venc{background:rgba(0,0,0,.42);border-color:rgba(255,255,255,.55);color:#fff}
+.grp-marca .grp-cel{font-size:10.5px;font-weight:600;color:rgba(255,255,255,.78)}
+/* Las de líder llevan el mismo naranja: el nombre del grupo ya las distingue,
+   y meter un segundo color de banda peleaba con la marca. */
+.grp-marca.sin{background:#2b3856}
+.grp-marca.sin .nm{color:rgba(255,255,255,.66);font-weight:600;font-size:13.5px}
+.grp-marca.sin .cnt{color:var(--text2);border-color:var(--border2);background:rgba(0,0,0,.2)}
+.grp-marca.sin .grp-cel{color:var(--text3)}
 .grp-cel{font-size:10.5px;color:var(--text3);font-weight:600}
 .filtros-tar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;padding:10px 18px;border-bottom:1px solid var(--border)}
 .flt-lbl{font-size:9.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em}
 .tipo-btn{flex:none;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:5px 10px;
   border-radius:20px;cursor:pointer;background:rgba(255,255,255,.05);color:var(--text3);border:1px solid var(--border2)}
 .tipo-btn:hover{border-color:var(--orange);color:var(--orange)}
-.tipo-btn.lid{background:rgba(122,158,202,.16);color:var(--blue);border-color:rgba(122,158,202,.4)}
+.tipo-btn.lid{background:rgba(240,78,35,.14);color:#ffa584;border-color:rgba(240,78,35,.45)}
 
 
 .add-ini{padding:14px 18px;background:rgba(0,0,0,.18);border-top:1px solid var(--border)}
