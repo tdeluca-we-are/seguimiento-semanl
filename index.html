@@ -321,23 +321,28 @@ select.inp{cursor:pointer}
 .viz-tabla td.n,.viz-tabla th.n{text-align:right;font-variant-numeric:tabular-nums}
 
 .rec-ico{color:var(--orange);font-size:16px;line-height:1;flex:none}
-/* Naranja pleno, no translúcido: el problema anterior era mezclarlo con el navy.
-   Va el tono profundo (#d43d16) y no el brillante, porque con el brillante el
-   texto blanco queda en 3.6:1 — acá da 4.7:1 y se lee limpio. */
-.grp-marca{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 18px 11px;
-  background:var(--orange2);
-  border-top:1px solid rgba(255,255,255,.18);border-bottom:1px solid rgba(0,0,0,.3)}
-.grp-marca .nm{font-size:14.5px;font-weight:700;letter-spacing:-.01em;color:#fff;line-height:1.2}
+/* Grafito neutro, no otro azul y no naranja: este encabezado se repite diez
+   veces por página, así que tiene que separar sin pedir atención. Es gris de
+   croma casi cero, así que contra el navy se lee como "otro material" y no
+   como un azul lavado. El color queda para los estados de cada fila, que es
+   lo único que de verdad tiene que saltar. */
+.grp-marca{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 18px;
+  background:rgba(255,255,255,.1);
+  border-top:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(0,0,0,.28);
+  box-shadow:inset 3px 0 0 var(--orange)}
+.grp-marca .nm{font-size:14px;font-weight:700;letter-spacing:-.01em;color:#fff;line-height:1.2}
+/* Los contadores dejan de ser cápsulas: dos pastillas gordas por encabezado
+   eran la mitad del ruido. Texto suelto, y el rojo solo donde hay algo vencido. */
+/* El naranja vuelve, pero translúcido y en piezas chicas: a este tamaño el
+   color se lee por el texto, así que no alcanza a enturbiarse. */
 .grp-marca .cnt{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
-  color:#fff;background:rgba(0,0,0,.26);border:1px solid rgba(255,255,255,.3);padding:3px 9px;border-radius:20px}
-.grp-marca .cnt.venc{background:rgba(0,0,0,.42);border-color:rgba(255,255,255,.55);color:#fff}
-.grp-marca .grp-cel{font-size:10.5px;font-weight:600;color:rgba(255,255,255,.78)}
-/* Las de líder llevan el mismo naranja: el nombre del grupo ya las distingue,
-   y meter un segundo color de banda peleaba con la marca. */
-.grp-marca.sin{background:#2b3856}
+  color:#ffa584;background:rgba(240,78,35,.16);border:1px solid rgba(240,78,35,.34);
+  padding:3px 9px;border-radius:20px}
+.grp-marca .cnt.venc{color:#ff9090;background:rgba(239,68,68,.15);border-color:rgba(239,68,68,.4)}
+.grp-marca .grp-cel{font-size:10.5px;font-weight:600;color:rgba(255,255,255,.4)}
+/* Las de líder llevan la misma banda: el nombre del grupo ya las distingue. */
+.grp-marca.sin{background:rgba(255,255,255,.05);box-shadow:inset 3px 0 0 var(--text3)}
 .grp-marca.sin .nm{color:rgba(255,255,255,.66);font-weight:600;font-size:13.5px}
-.grp-marca.sin .cnt{color:var(--text2);border-color:var(--border2);background:rgba(0,0,0,.2)}
-.grp-marca.sin .grp-cel{color:var(--text3)}
 .grp-cel{font-size:10.5px;color:var(--text3);font-weight:600}
 .filtros-tar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;padding:10px 18px;border-bottom:1px solid var(--border)}
 .flt-lbl{font-size:9.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em}
