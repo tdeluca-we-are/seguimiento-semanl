@@ -34,6 +34,12 @@ button,input,select,textarea{font-family:inherit}
 .logo-we{color:#f0f0f0}.logo-are{color:var(--orange)}
 .top-divider{width:1px;height:20px;background:var(--border2)}
 .top-sub{font-size:12px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.07em;white-space:nowrap}
+/* selector de espacio: Email / Paid */
+.esp-sw{display:inline-flex;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:3px;gap:2px}
+.esp-sw button{font-size:12px;font-weight:600;padding:5px 14px;border-radius:20px;border:none;cursor:pointer;
+  background:transparent;color:var(--text2);white-space:nowrap}
+.esp-sw button:hover{color:var(--text)}
+.esp-sw button.on{background:var(--orange);color:#fff;font-weight:700}
 /* ===== login ===== */
 .auth{min-height:100vh;display:none;align-items:center;justify-content:center;padding:24px}
 .auth.on{display:flex}
@@ -404,6 +410,75 @@ td.cell{text-align:center;padding:6px 8px}
   padding:2px 7px;border-radius:20px;flex:none;margin-top:1px}
 .empty{padding:26px 18px;text-align:center;color:var(--text3);font-size:12.5px;line-height:1.6}
 
+/* ===== tablero estilo Monday ===== */
+.bg-grupo{border-bottom:1px solid rgba(255,255,255,.07)}
+.bg-grupo:last-child{border-bottom:none}
+.bg-hdr{display:flex;align-items:center;gap:8px;padding:9px 18px 9px 15px;
+  background:rgba(255,255,255,.055);border-left:4px solid var(--gc);border-bottom:1px solid rgba(0,0,0,.2)}
+.bg-caret{background:none;border:none;color:var(--gc);cursor:pointer;font-size:12px;padding:2px 4px;line-height:1}
+.bg-caret.chico{color:var(--text3);font-size:10px}
+.bg-caret.chico:hover{color:var(--orange)}
+.bg-nom{flex:0 1 auto;min-width:90px;max-width:340px;background:transparent;border:1px solid transparent;border-radius:6px;
+  color:var(--gc);font-size:14px;font-weight:700;padding:3px 7px;outline:none;letter-spacing:-.01em}
+.bg-hdr:hover .bg-nom{border-color:var(--border2)}
+.bg-nom:focus{border-color:var(--gc);background:var(--bg3);color:#fff}
+.bg-cnt{font-size:11px;color:var(--text3);font-weight:600;white-space:nowrap}
+.bg-acc{margin-left:auto;display:flex;gap:2px;opacity:0;transition:opacity .12s}
+.bg-hdr:hover .bg-acc{opacity:1}
+.bg-acc .ico{color:var(--text3)}
+.bg-acc .ico:first-child{color:var(--gc)}
+
+.bg-tabla{display:flex;flex-direction:column}
+.bg-row{display:grid;grid-template-columns:minmax(200px,1fr) 132px 150px 132px 46px 34px;gap:8px;
+  align-items:center;padding:6px 18px 6px 15px;border-bottom:1px solid rgba(255,255,255,.045);
+  border-left:4px solid transparent}
+.bg-row:last-child{border-bottom:none}
+.bg-row:hover{background:rgba(255,255,255,.03)}
+.bg-head{font-size:9.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;
+  padding-top:8px;padding-bottom:8px;background:rgba(0,0,0,.14)}
+.bg-head:hover{background:rgba(0,0,0,.14)}
+.bg-tx{display:flex;align-items:center;gap:6px;min-width:0}
+.bg-item{flex:1;min-width:0;background:transparent;border:1px solid transparent;border-radius:6px;color:var(--text);
+  font-size:13px;font-weight:500;padding:5px 7px;outline:none;text-overflow:ellipsis}
+.bg-row:hover .bg-item{border-color:var(--border2)}
+.bg-item:focus{border-color:var(--orange);background:var(--bg3)}
+.bg-mini{font-size:9.5px;font-weight:700;color:var(--text3);background:rgba(255,255,255,.06);
+  border-radius:20px;padding:2px 7px;white-space:nowrap;flex:none}
+.est-sel,.per-sel,.fch-inp{width:100%;font-family:var(--font);font-size:11.5px;border-radius:6px;outline:none;
+  border:1px solid var(--border2);padding:5px 7px;cursor:pointer}
+.est-sel{font-weight:700;border-color:transparent;text-align:center;-webkit-appearance:none;appearance:none}
+.est-sel option{background:var(--bg3);color:var(--text);font-weight:500}
+.per-sel,.fch-inp{background:transparent;color:var(--text2)}
+.bg-row:hover .per-sel,.bg-row:hover .fch-inp{border-color:var(--border2);background:var(--bg3)}
+.per-sel:focus,.fch-inp:focus{border-color:var(--orange);background:var(--bg3)}
+.bg-com{background:none;border:1px solid transparent;border-radius:6px;color:var(--text3);cursor:pointer;
+  font-size:11px;font-weight:700;padding:4px 6px;white-space:nowrap}
+.bg-com:hover{color:var(--orange);border-color:var(--border2)}
+.bg-com.hay{color:var(--orange)}
+.bg-add{display:flex;gap:7px;padding:8px 18px 10px 44px;align-items:center}
+.bg-add .inp{flex:1;max-width:460px;font-size:12.5px;padding:7px 10px;background:transparent;border-style:dashed}
+.bg-add .inp:focus{background:var(--bg3);border-style:solid}
+.bg-add.sub{padding-left:62px}
+
+.bg-det{padding:12px 18px 14px 44px;background:rgba(0,0,0,.18);border-bottom:1px solid rgba(255,255,255,.05)}
+.bg-det-t{font-size:9.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.bg-tabla.sub .bg-row{padding-left:6px;border-left:none}
+.bg-hijo{color:var(--text3);font-size:12px;padding:0 2px;flex:none}
+.bg-coms{display:flex;flex-direction:column;gap:8px;margin-bottom:9px}
+.bg-com-i{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);padding:8px 11px}
+.bg-com-h{display:flex;align-items:center;gap:8px;margin-bottom:3px}
+.bg-com-h b{font-size:11.5px;color:var(--text)}
+.bg-com-h span{font-size:10.5px;color:var(--text3);font-family:var(--mono)}
+.bg-com-h .ico{margin-left:auto;opacity:0}
+.bg-com-i:hover .bg-com-h .ico{opacity:1}
+.bg-com-tx{font-size:12.5px;color:var(--text2);line-height:1.5}
+.col-inp{width:34px;height:28px;padding:2px;background:var(--bg3);border:1px solid var(--border2);
+  border-radius:6px;cursor:pointer;flex:none}
+@media(max-width:900px){
+  .bg-row{grid-template-columns:minmax(140px,1fr) 110px 46px 34px}
+  .bg-row>div:nth-child(3),.bg-row>div:nth-child(4){display:none}
+}
+
 /* ===== temas ===== */
 .tema-item{border-bottom:1px solid rgba(255,255,255,.06)}
 .tema-item:last-of-type{border-bottom:none}
@@ -519,7 +594,7 @@ mark{background:rgba(240,78,35,.28);color:#fff;border-radius:3px;padding:0 2px}
     <img id="iso" class="iso" alt="">
     <span class="text-logo-sm"><span class="logo-we">We</span> <span class="logo-are">Are</span></span>
     <span class="top-divider"></span>
-    <span class="top-sub">Seguimiento semanal</span>
+    <span class="esp-sw" id="esp-sw"></span>
     <span id="sync"></span>
   </div>
   <div class="top-right">
@@ -542,7 +617,6 @@ mark{background:rgba(240,78,35,.28);color:#fff;border-radius:3px;padding:0 2px}
   <div class="pane" id="pane-proyectos"></div>
   <div class="pane" id="pane-cuentas"></div>
   <div class="pane" id="pane-personas"></div>
-  <div class="pane" id="pane-tareas"></div>
   <div class="pane" id="pane-evolucion"></div>
   <div class="pane" id="pane-config"></div>
 </div>
@@ -600,41 +674,54 @@ const TIPOS = [{k:'rock',n:'Rock'},{k:'proyecto',n:'Proyecto'},{k:'tarea',n:'Tar
 const MESES = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
 const EMPTY = Object.freeze({inis:{}, cuentas:{}, personas:{}, temas:[], nota:'', acuerdos:''});
 
-/* ---------- estado ---------- */
-let S = blank();
+/* ---------- estado ----------
+   RAIZ guarda todo; S apunta al espacio activo (Email o Paid). Como el resto
+   del código lee S.cuentas, S.personas… en el momento de usarlo, cambiar de
+   espacio es reapuntar S y volver a dibujar: no hay dos copias de nada. */
+// Ojo con el orden: blankRaiz() usa estas constantes, así que van antes de la
+// primera llamada o el script muere con un TDZ y la app no arranca.
+const ESPACIOS = [{k:'email', n:'Email Marketing'}, {k:'paid', n:'Paid Media'}];
+const ESTADOS_BASE = [
+  {id:'e1', n:'Sin empezar', c:'#5b6b82'},
+  {id:'e2', n:'En curso',    c:'#3987e5'},
+  {id:'e3', n:'Trabado',     c:'#ef4444'},
+  {id:'e4', n:'Listo',       c:'#22c55e'}
+];
+const COLORES_GRUPO = ['#f04e23','#3987e5','#22c55e','#f59e0b','#9085e9','#e87ba4','#1baf7a','#7a9eca'];
+
+let RAIZ = blankRaiz();
+let S = RAIZ.espacios[RAIZ.activo];
 let UID = null, MAIL = '', VERSION = 0, sincro = 'ok', reintento = null;
 let tab = 'resumen';
 let cur = wkKey(new Date());
 let openCta = null;
 let fProy = 'todos', fCta = 'todas', fCel = 'todas', qCta = '', hmView = 'cuentas';
-let fTar = 'pend', fTarMarca = 'todas', fTarCel = 'todas', fTarTipo = 'todos';
-let tarDescOpen = {}, ntDescOpen = false, ntTipo = 'marca';
-let tarDetOpen = {}, fechaEdit = null;
-let vizOpen = true, vizTabla = false;
 let descOpen = {}, temaOpen = {};
+let resumenOpen = true;                 // franja de KPIs/alertas arriba del tablero
 
-function blank(){ return {v:1, cuentas:[], personas:[], inis:[], tareas:[], recurrentes:[], semanas:{}}; }
+function blank(){ return {cuentas:[], personas:[], inis:[], tareas:[], recurrentes:[], semanas:{},
+  tablero:{estados:JSON.parse(JSON.stringify(ESTADOS_BASE)), grupos:[]}}; }
+function blankRaiz(){
+  const r = {v:2, activo:'email', espacios:{}, ultimoBackup:''};
+  ESPACIOS.forEach(e=>{ r.espacios[e.k] = Object.assign(blank(), {nombre:e.n}); });
+  return r;
+}
+const T = () => (S.tablero = S.tablero || {estados:JSON.parse(JSON.stringify(ESTADOS_BASE)), grupos:[]});
 
 // Rellena lo que falte para que datos viejos (o de otra versión) no rompan nada
-function normalizar(raw){
+function normalizarEspacio(raw){
   if(!raw || typeof raw !== 'object') return blank();
-  raw.v = raw.v || 1;
   raw.cuentas = raw.cuentas || []; raw.personas = raw.personas || [];
   raw.inis = raw.inis || []; raw.semanas = raw.semanas || {};
   raw.tareas = raw.tareas || []; raw.recurrentes = raw.recurrentes || [];
   raw.personas.forEach(p => p.objetivos = p.objetivos || []);
-  // Antes no existía el tipo de tarea y "Líder" se cargaba como si fuera una marca.
-  // Al abrir por primera vez la versión nueva, esas pasan a ser tareas de líder.
-  const esLider = m => /^\s*l[ií]der(es)?\s*$/i.test(m || '');
-  raw.tareas.forEach(t=>{
-    if(t.tipo) return;
-    t.tipo = esLider(t.marca) ? 'lider' : 'marca';
-    if(t.tipo === 'lider') t.marca = '';
-  });
-  raw.recurrentes.forEach(r=>{
-    if(r.tipo) return;
-    r.tipo = esLider(r.marca) ? 'lider' : 'marca';
-    if(r.tipo === 'lider') r.marca = '';
+  raw.tablero = raw.tablero || {};
+  raw.tablero.estados = (raw.tablero.estados && raw.tablero.estados.length)
+    ? raw.tablero.estados : JSON.parse(JSON.stringify(ESTADOS_BASE));
+  raw.tablero.grupos = raw.tablero.grupos || [];
+  raw.tablero.grupos.forEach(g=>{
+    g.items = g.items || [];
+    g.items.forEach(it=>{ it.subitems = it.subitems || []; it.comentarios = it.comentarios || []; });
   });
   // los temas viejos no tenían id: se los asignamos para poder abrirles las notas
   Object.keys(raw.semanas).forEach(k=>{
@@ -644,6 +731,33 @@ function normalizar(raw){
   });
   return raw;
 }
+/* Acepta tanto el formato nuevo (v2, con espacios) como el viejo (v1, con las
+   cuentas colgando de la raíz). Lo viejo entra entero como Email Marketing,
+   que es con lo que Tomás lo venía usando. */
+function normalizar(raw){
+  if(!raw || typeof raw !== 'object') return blankRaiz();
+  if(raw.v === 2 && raw.espacios){
+    const r = {v:2, activo:raw.activo || 'email', espacios:{}, ultimoBackup:raw.ultimoBackup || ''};
+    ESPACIOS.forEach(e=>{
+      r.espacios[e.k] = Object.assign(normalizarEspacio(raw.espacios[e.k] || blank()),
+        {nombre:(raw.espacios[e.k] && raw.espacios[e.k].nombre) || e.n});
+    });
+    if(!r.espacios[r.activo]) r.activo = 'email';
+    return r;
+  }
+  const r = blankRaiz();
+  r.ultimoBackup = raw.ultimoBackup || '';
+  r.espacios.email = Object.assign(normalizarEspacio(raw), {nombre:'Email Marketing'});
+  return r;
+}
+function apuntarEspacio(){ S = RAIZ.espacios[RAIZ.activo] || RAIZ.espacios.email; return S; }
+function cambiarEspacio(k){
+  if(!RAIZ.espacios[k] || k === RAIZ.activo) return;
+  RAIZ.activo = k; apuntarEspacio();
+  openCta = null; fCta = 'todas'; fCel = 'todas'; qCta = ''; fProy = 'todos';
+  saveNow(); render(); window.scrollTo({top:0,behavior:'smooth'});
+  toast('Estás en '+S.nombre);
+}
 function leerLocal(){
   try{ const r = JSON.parse(localStorage.getItem(LS)); return r && r.v ? normalizar(r) : null; }
   catch(e){ return null; }
@@ -651,14 +765,17 @@ function leerLocal(){
 function leerMeta(){ try{ return JSON.parse(localStorage.getItem(LS_META)) || {}; }catch(e){ return {}; } }
 function guardarLocal(pendiente){
   try{
-    localStorage.setItem(LS, JSON.stringify(S));
+    localStorage.setItem(LS, JSON.stringify(RAIZ));
     localStorage.setItem(LS_META, JSON.stringify({version:VERSION, pendiente:!!pendiente, ts:Date.now()}));
   }catch(e){ console.warn('caché local no disponible', e); }
 }
-function tieneContenido(d){
-  if(!d) return false;
-  return !!(d.cuentas.length || d.personas.length || d.inis.length || d.tareas.length ||
-    Object.keys(d.semanas||{}).length);
+function tieneContenido(raiz){
+  if(!raiz || !raiz.espacios) return false;
+  return Object.keys(raiz.espacios).some(k=>{
+    const d = raiz.espacios[k];
+    return !!(d.cuentas.length || d.personas.length || d.inis.length ||
+      Object.keys(d.semanas||{}).length || (d.tablero && d.tablero.grupos.length));
+  });
 }
 
 /* ---------- guardado en la nube ---------- */
@@ -687,7 +804,7 @@ function subir(){
   marcarSync('va');
   const nueva = VERSION + 1;
   sb.from('seg_estado')
-    .update({datos:S, version:nueva, actualizado:new Date().toISOString()})
+    .update({datos:RAIZ, version:nueva, actualizado:new Date().toISOString()})
     .eq('user_id', UID).eq('version', VERSION).select('version')
     .then(function(r){
       if(r.error){ marcarSync('mal'); reintento = setTimeout(subir, 8000); return; }
@@ -964,14 +1081,11 @@ function tabsHtml(){
   const risk = activos(S.inis).filter(i=>rIni(cur,i.id).estado==='rojo').length;
   const ctaRojo = activos(S.cuentas).filter(c=>ctaGeneral(cur,c.id)==='rojo').length;
   const perRisk = activos(S.personas).filter(p=>{const e=rPer(cur,p.id).estado; return e==='rojo'||e==='amarillo';}).length;
-  const hoy = isoDate(new Date());
-  const vencidas = (S.tareas||[]).filter(t=>!t.hecha && t.fecha && t.fecha < hoy).length;
   const defs = [
-    ['resumen','1:1', null],
+    ['resumen','Seguimiento', null],
     ['proyectos','Proyectos / Rocks', risk],
     ['cuentas','Cuentas', ctaRojo],
     ['personas','Personas', perRisk],
-    ['tareas','Mis tareas', vencidas],
     ['evolucion','Evolución', null],
     ['config','Config', null]
   ];
@@ -1002,6 +1116,9 @@ function render(){
     else if(ae.dataset && ae.dataset.k) foco = ae.dataset.k;   // chips de semáforo
   }
   document.getElementById('tabs').innerHTML = tabsHtml();
+  document.getElementById('esp-sw').innerHTML = ESPACIOS.map(e=>
+    '<button class="'+(RAIZ.activo===e.k?'on':'')+'" onclick="cambiarEspacio(\''+e.k+'\')">'+
+    esc(RAIZ.espacios[e.k].nombre || e.n)+'</button>').join('');
   const lbl = document.getElementById('wklabel');
   const dif = semanasDeDiferencia(cur);
   const sub = dif === 0 ? 'semana actual'
@@ -1016,25 +1133,17 @@ function render(){
   const pane = document.getElementById('pane-'+tab);
   pane.classList.add('active');
   pane.innerHTML = ({resumen:vResumen, proyectos:vProyectos, cuentas:vCuentas, personas:vPersonas,
-                     tareas:vTareas, evolucion:vEvolucion, config:vConfig})[tab]();
+ evolucion:vEvolucion, config:vConfig})[tab]();
   if(foco){
     const el = pane.querySelector('.rich[data-k="'+foco+'"] .rich-body') || pane.querySelector('[data-k="'+foco+'"]');
     if(el){ el.focus(); if(el.classList.contains('rich-body')) placeCaretEnd(el); }
   }
 }
 
-/* ---------- llevar cualquier cosa a los temas del 1:1 ---------- */
-function alUnoAUno(txt, nota){
-  const w = W(true);
-  if(w.temas.some(t=>t.txt === txt)){ toast('Ya está en los temas de esta semana'); return; }
-  const t = {id:uid(), txt:txt, ok:false, nota:nota || '', reunion:''};
-  w.temas.push(t); temaOpen[t.id] = !!nota;
-  saveNow(); render();
-  toast('"'+ (txt.length>34?txt.slice(0,32)+'…':txt) +'" agregado a los temas del 1:1');
-}
+/* ---------- llevar cualquier cosa al tablero (la función vive más abajo) ---------- */
 function btnAlUno(txt, nota){
-  return '<button class="btn-ghost no-print" title="Sumarlo a los temas del 1:1 de esta semana" '+
-    'onclick="event.stopPropagation();alUnoAUno('+jsArg(txt)+','+jsArg(nota)+')">&rarr; 1:1</button>';
+  return '<button class="btn-ghost no-print" title="Crear un ítem en el tablero de seguimiento" '+
+    'onclick="event.stopPropagation();alUnoAUno('+jsArg(txt)+','+jsArg(nota)+')">&rarr; Tablero</button>';
 }
 
 /* ============================================================
@@ -1101,7 +1210,27 @@ function alertas(){
   return out;
 }
 
-function vResumen(){
+function vResumen(){ return franjaResumen() + vTablero(); }
+
+/* La franja de arriba: KPIs, qué cambió y alertas. Se pliega porque no todos
+   los días entrás a mirar el diff — pero cuando preparás la reunión, es lo
+   primero que querés. */
+function franjaResumen(){
+  const cab = '<div class="section" style="margin-bottom:14px"><div class="section-hdr">'+
+    '<div class="section-title"><span class="dot"></span>Resumen de la semana</div>'+
+    '<div style="display:flex;gap:6px;align-items:center">'+
+      '<button class="btn-sm no-print" onclick="verReporte()">Ver reporte</button>'+
+      '<button class="btn-sm" onclick="resumenOpen=!resumenOpen;render()">'+(resumenOpen?'Ocultar':'Mostrar')+'</button>'+
+    '</div></div>';
+  if(!resumenOpen){
+    const chgs = cambios(), alrt = alertas();
+    return cab + '<div class="section-body"><div class="hint">'+
+      chgs.length+' cambio'+(chgs.length===1?'':'s')+' vs. la semana pasada · '+
+      alrt.length+' alerta'+(alrt.length===1?'':'s')+'</div></div></div>';
+  }
+  return cab + '<div class="section-body" style="padding:14px 18px">'+cuerpoResumen()+'</div></div>';
+}
+function cuerpoResumen(){
   const w = W(false);
   const totalCargable = activos(S.inis).length + activos(S.cuentas).length*3 + activos(S.personas).length;
   let cargado = 0;
@@ -1159,34 +1288,6 @@ function vResumen(){
   h += '</div></div>';
   h += '</div>';
 
-  const temas = (w.temas||[]);
-  h += '<div class="section"><div class="section-hdr"><div class="section-title"><span class="dot"></span>Temas para el 1:1 con Gastón</div>'+
-       '<div><button class="btn-orange no-print" onclick="verReporte()">Ver reporte de la semana</button></div></div><div class="section-body">';
-  h += temas.map((t,i)=>{
-    const abierto = temaOpen[t.id];
-    const conNotas = !!(toText(t.nota) || toText(t.reunion));
-    return '<div class="tema-item">'+
-      '<div class="tema'+(t.ok?' done':'')+'">'+
-        '<input type="checkbox" class="chk" '+(t.ok?'checked':'')+' onchange="toggleTema('+i+')">'+
-        '<input class="tx" value="'+esc(t.txt)+'" placeholder="Tema..." oninput="setTema('+i+',this.value)">'+
-        (conNotas && !abierto ? '<span class="tema-flag">con notas</span>' : '')+
-        '<button class="btn-ghost" onclick="toggleTemaOpen(\''+t.id+'\')">'+
-          (abierto ? 'Ocultar notas' : (conNotas ? 'Ver notas' : '+ Notas'))+'</button>'+
-        '<button class="del" onclick="delTema('+i+')" title="Borrar">×</button>'+
-      '</div>'+
-      (abierto ?
-        '<div class="tema-notas">'+
-          '<div class="fld" style="margin:0"><label>Mis notas — qué quiero plantear</label>'+
-            richBox('tema-nota-'+t.id, t.nota, 'setTemaField('+i+',\'nota\',richIn(this))',
-              'El contexto, los números, lo que necesito pedir...')+'</div>'+
-          '<div class="reunion-box"><label>Notas de la reunión — qué se habló</label>'+
-            richBox('tema-reu-'+t.id, t.reunion, 'setTemaField('+i+',\'reunion\',richIn(this))',
-              'Qué dijo Gastón, qué se definió, qué queda pendiente...')+'</div>'+
-        '</div>' : '')+
-    '</div>';
-  }).join('');
-  h += '<div class="cfg-add no-print"><input class="inp" id="newtema" placeholder="Agregar tema para hablar..." '+
-       'onkeydown="if(event.key===\'Enter\')addTema()"><button class="btn-orange" onclick="addTema()">Agregar</button></div>';
   h += '<div class="two-col" style="margin-top:16px">'+
     '<div class="fld"><label>Notas / contexto de la semana</label>'+
     richBox('wk-nota', w.nota, 'setWeekField(\'nota\',richIn(this))', 'Lo que quiero contar, dudas, pedidos...', 90)+
@@ -1195,22 +1296,267 @@ function vResumen(){
     richBox('wk-acuerdos', w.acuerdos, 'setWeekField(\'acuerdos\',richIn(this))', 'Qué se definió, qué queda para la próxima...', 90)+
     prevNote((S.semanas[shiftKey(cur,-1)]||{}).acuerdos)+'</div>'+
   '</div>';
-  h += '</div></div>';
   return h;
 }
 function kpi(label,val,sub,cls){
   return '<div class="kpi '+(cls||'')+'"><div class="kpi-label">'+label+'</div><div class="kpi-val">'+val+'</div><div class="kpi-sub">'+sub+'</div></div>';
 }
-function addTema(){
-  const el = document.getElementById('newtema'); const v = el.value.trim(); if(!v) return;
-  const t = {id:uid(), txt:v, ok:false, nota:'', reunion:''};
-  W(true).temas.push(t); temaOpen[t.id] = true; saveNow(); render();
+/* ============================================================
+   TABLERO — grupos › ítems › subítems, con estado, responsable,
+   fecha y comentarios. Todo vive en S.tablero, fuera del snapshot
+   semanal: el tablero es continuo, las semanas son fotos.
+   ============================================================ */
+let itemOpen = {}, estadosOpen = false;
+const findG = gid => T().grupos.find(g=>g.id===gid);
+const findI = (gid,iid) => { const g = findG(gid); return g && g.items.find(i=>i.id===iid); };
+const estadoDe = id => T().estados.find(e=>e.id===id) || null;
+function nombrePersona(pid){
+  const p = S.personas.find(x=>x.id===pid);
+  return p ? p.nombre : '';
 }
-function setTema(i,v){ W(true).temas[i].txt = v; save(); }
-function setTemaField(i,f,v){ W(true).temas[i][f] = v; save(); }
-function toggleTemaOpen(id){ temaOpen[id] = !temaOpen[id]; render(); }
-function toggleTema(i){ const t = W(true).temas[i]; t.ok = !t.ok; saveNow(); render(); }
-function delTema(i){ W(true).temas.splice(i,1); saveNow(); render(); }
+function inicialesDe(nombre){
+  return nombre.trim().split(/\s+/).slice(0,2).map(x=>x[0]).join('').toUpperCase();
+}
+
+/* --- ABM de grupos --- */
+function addGrupo(){
+  const t = T();
+  t.grupos.push({id:uid(), nombre:'Grupo nuevo', color:COLORES_GRUPO[t.grupos.length % COLORES_GRUPO.length],
+    plegado:false, items:[]});
+  saveNow(); render();
+}
+function setGrupo(gid,campo,v){ const g = findG(gid); if(g){ g[campo] = v; save(); } }
+function ciclarColorGrupo(gid){
+  const g = findG(gid); if(!g) return;
+  const i = COLORES_GRUPO.indexOf(g.color);
+  g.color = COLORES_GRUPO[(i+1) % COLORES_GRUPO.length];
+  saveNow(); render();
+}
+function plegarGrupo(gid){ const g = findG(gid); if(g){ g.plegado = !g.plegado; saveNow(); render(); } }
+function delGrupo(gid){
+  const g = findG(gid); if(!g) return;
+  if(g.items.length && !confirm('El grupo "'+g.nombre+'" tiene '+g.items.length+' ítem(s). ¿Borrarlo con todo adentro?')) return;
+  T().grupos = T().grupos.filter(x=>x.id!==gid); saveNow(); render();
+}
+function moverGrupo(gid,d){
+  const gs = T().grupos, i = gs.findIndex(g=>g.id===gid), j = i+d;
+  if(i<0 || j<0 || j>=gs.length) return;
+  const tmp = gs[i]; gs[i] = gs[j]; gs[j] = tmp; saveNow(); render();
+}
+
+/* --- ítems --- */
+function addItem(gid, texto){
+  const g = findG(gid); if(!g) return;
+  const el = document.getElementById('ni-'+gid);
+  const txt = (texto !== undefined ? texto : (el ? el.value : '')).trim();
+  if(!txt) return;
+  g.items.push({id:uid(), texto:txt, estado:T().estados[0].id, resp:'', fecha:'', subitems:[], comentarios:[]});
+  saveNow(); render();
+  const nuevo = document.getElementById('ni-'+gid); if(nuevo) nuevo.focus();
+}
+function setItem(gid,iid,campo,v){ const it = findI(gid,iid); if(it){ it[campo] = v; save(); } }
+function setItemAhora(gid,iid,campo,v){ const it = findI(gid,iid); if(it){ it[campo] = v; saveNow(); render(); } }
+function delItemTab(gid,iid){
+  const g = findG(gid), it = findI(gid,iid); if(!g || !it) return;
+  if(!confirm('¿Borrar "'+it.texto+'"?')) return;
+  g.items = g.items.filter(x=>x.id!==iid); saveNow(); render();
+}
+function toggleItem(gid,iid){ const k = gid+'/'+iid; itemOpen[k] = !itemOpen[k]; render(); }
+
+/* --- subítems --- */
+function addSub(gid,iid){
+  const it = findI(gid,iid); if(!it) return;
+  const el = document.getElementById('ns-'+iid);
+  const txt = (el ? el.value : '').trim(); if(!txt) return;
+  it.subitems.push({id:uid(), texto:txt, estado:T().estados[0].id, resp:'', fecha:''});
+  saveNow(); render();
+  const nuevo = document.getElementById('ns-'+iid); if(nuevo) nuevo.focus();
+}
+function setSub(gid,iid,sid,campo,v){
+  const it = findI(gid,iid); if(!it) return;
+  const s = it.subitems.find(x=>x.id===sid); if(s){ s[campo] = v; save(); }
+}
+function setSubAhora(gid,iid,sid,campo,v){
+  const it = findI(gid,iid); if(!it) return;
+  const s = it.subitems.find(x=>x.id===sid); if(s){ s[campo] = v; saveNow(); render(); }
+}
+function delSub(gid,iid,sid){
+  const it = findI(gid,iid); if(!it) return;
+  it.subitems = it.subitems.filter(x=>x.id!==sid); saveNow(); render();
+}
+
+/* --- comentarios --- */
+function addComentario(gid,iid){
+  const it = findI(gid,iid); if(!it) return;
+  const el = document.getElementById('nc-'+iid);
+  const txt = (el ? el.value : '').trim(); if(!txt) return;
+  it.comentarios.push({id:uid(), texto:txt, fecha:isoDate(new Date()), autor:(MAIL||'').split('@')[0]});
+  saveNow(); render();
+  const nuevo = document.getElementById('nc-'+iid); if(nuevo) nuevo.focus();
+}
+function delComentario(gid,iid,cid){
+  const it = findI(gid,iid); if(!it) return;
+  it.comentarios = it.comentarios.filter(c=>c.id!==cid); saveNow(); render();
+}
+
+/* --- estados configurables --- */
+function addEstado(){
+  T().estados.push({id:uid(), n:'Nuevo estado', c:COLORES_GRUPO[T().estados.length % COLORES_GRUPO.length]});
+  saveNow(); render();
+}
+function setEstadoCampo(eid,campo,v){ const e = estadoDe(eid); if(e){ e[campo] = v; save(); } }
+function delEstado(eid){
+  const t = T();
+  if(t.estados.length <= 1){ toast('Tiene que quedar al menos un estado'); return; }
+  const usos = t.grupos.reduce((n,g)=> n + g.items.filter(i=>i.estado===eid).length, 0);
+  if(usos && !confirm('Hay '+usos+' ítem(s) con ese estado. Si lo borrás, quedan sin estado. ¿Seguir?')) return;
+  t.estados = t.estados.filter(e=>e.id!==eid); saveNow(); render();
+}
+
+/* --- lo que antes era "llevar al 1:1" ahora crea un ítem --- */
+function alUnoAUno(txt, nota){
+  const t = T();
+  if(!t.grupos.length) t.grupos.push({id:uid(), nombre:'Temas de la semana', color:COLORES_GRUPO[0], plegado:false, items:[]});
+  const g = t.grupos[0];
+  if(g.items.some(i=>i.texto === txt)){ toast('Ya está en el tablero'); return; }
+  const it = {id:uid(), texto:txt, estado:t.estados[0].id, resp:'', fecha:'', subitems:[], comentarios:[]};
+  if(nota) it.comentarios.push({id:uid(), texto:nota, fecha:isoDate(new Date()), autor:(MAIL||'').split('@')[0]});
+  g.items.push(it);
+  saveNow(); render();
+  toast('"'+(txt.length>32?txt.slice(0,30)+'…':txt)+'" va al tablero, en '+g.nombre);
+}
+
+/* --- dibujo --- */
+function celdaEstado(estId, onchange){
+  const e = estadoDe(estId);
+  const col = e ? e.c : 'rgba(255,255,255,.06)';
+  return '<select class="est-sel" style="background:'+col+';color:'+(e?'#fff':'var(--text3)')+'" onchange="'+onchange+'">'+
+    (e ? '' : '<option value="" selected>— sin estado —</option>')+
+    T().estados.map(x=>'<option value="'+x.id+'"'+(x.id===estId?' selected':'')+'>'+esc(x.n)+'</option>').join('')+
+    '</select>';
+}
+function celdaPersona(pid, onchange){
+  const act = activos(S.personas);
+  return '<select class="per-sel" onchange="'+onchange+'">'+
+    '<option value="">— sin asignar —</option>'+
+    act.map(p=>'<option value="'+p.id+'"'+(p.id===pid?' selected':'')+'>'+esc(p.nombre)+'</option>').join('')+
+    (pid && !act.some(p=>p.id===pid) ? '<option value="'+pid+'" selected>(persona archivada)</option>' : '')+
+    '</select>';
+}
+function vTablero(){
+  const t = T();
+  let h = '<div class="section"><div class="section-hdr">'+
+    '<div class="section-title"><span class="dot"></span>Tablero de seguimiento</div>'+
+    '<div style="display:flex;gap:6px">'+
+      '<button class="btn-sm" onclick="estadosOpen=!estadosOpen;render()">'+(estadosOpen?'Cerrar estados':'Estados')+'</button>'+
+      '<button class="btn-orange" onclick="addGrupo()">+ Grupo</button>'+
+    '</div></div>';
+
+  if(estadosOpen){
+    h += '<div class="section-body" style="border-bottom:1px solid var(--border)">'+
+      '<div class="hint" style="margin-bottom:9px">Las etiquetas de estado son tuyas: cambiá el nombre y el color, o agregá las que uses.</div>'+
+      t.estados.map(e=>
+        '<div class="cfg-row">'+
+          '<input type="color" class="col-inp" value="'+esc(e.c)+'" oninput="setEstadoCampo(\''+e.id+'\',\'c\',this.value)" title="Color">'+
+          '<input class="inp nm" value="'+esc(e.n)+'" oninput="setEstadoCampo(\''+e.id+'\',\'n\',this.value)">'+
+          '<button class="mini" onclick="delEstado(\''+e.id+'\')" title="Quitar">&times;</button>'+
+        '</div>').join('')+
+      '<div style="margin-top:10px"><button class="btn-sm" onclick="addEstado()">+ Estado</button></div>'+
+    '</div>';
+  }
+
+  if(!t.grupos.length){
+    h += '<div class="empty">El tablero está vacío.<br>'+
+      '<span style="font-size:11px">Un grupo puede ser un cliente, un trimestre o un frente de trabajo. '+
+      'Adentro van los ítems, y cada ítem puede tener subítems y comentarios.</span><br>'+
+      '<button class="btn-orange" style="margin-top:12px" onclick="addGrupo()">Crear el primer grupo</button></div>';
+    return h + '</div>';
+  }
+
+  t.grupos.forEach(g=>{
+    const hechos = g.items.filter(i=>{ const e = estadoDe(i.estado); return e && /listo|hecho|termin/i.test(e.n); }).length;
+    h += '<div class="bg-grupo" style="--gc:'+esc(g.color)+'">'+
+      '<div class="bg-hdr">'+
+        '<button class="bg-caret" onclick="plegarGrupo(\''+g.id+'\')" title="'+(g.plegado?'Desplegar':'Plegar')+'">'+(g.plegado?'&#9656;':'&#9662;')+'</button>'+
+        '<input class="bg-nom" value="'+esc(g.nombre)+'" oninput="setGrupo(\''+g.id+'\',\'nombre\',this.value)">'+
+        '<span class="bg-cnt">'+g.items.length+' ítem'+(g.items.length===1?'':'s')+
+          (hechos?' · '+hechos+' listo'+(hechos===1?'':'s'):'')+'</span>'+
+        '<div class="bg-acc">'+
+          '<button class="ico" onclick="ciclarColorGrupo(\''+g.id+'\')" title="Cambiar color">&#9679;</button>'+
+          '<button class="ico" onclick="moverGrupo(\''+g.id+'\',-1)" title="Subir">&#9650;</button>'+
+          '<button class="ico" onclick="moverGrupo(\''+g.id+'\',1)" title="Bajar">&#9660;</button>'+
+          '<button class="ico" onclick="delGrupo(\''+g.id+'\')" title="Borrar grupo">&times;</button>'+
+        '</div>'+
+      '</div>';
+
+    if(!g.plegado){
+      h += '<div class="bg-tabla">'+
+        '<div class="bg-row bg-head"><div>Ítem</div><div>Estado</div><div>Responsable</div><div>Fecha</div><div title="Comentarios">&#128172;</div><div></div></div>';
+      g.items.forEach(it=>{
+        const abierto = !!itemOpen[g.id+'/'+it.id];
+        const nSub = it.subitems.length, nCom = it.comentarios.length;
+        h += '<div class="bg-row">'+
+          '<div class="bg-tx">'+
+            '<button class="bg-caret chico" onclick="toggleItem(\''+g.id+'\',\''+it.id+'\')" '+
+              'title="Subítems y comentarios">'+(abierto?'&#9662;':'&#9656;')+'</button>'+
+            '<input class="bg-item" value="'+esc(it.texto)+'" oninput="setItem(\''+g.id+'\',\''+it.id+'\',\'texto\',this.value)">'+
+            (nSub?'<span class="bg-mini" title="Subítems">'+nSub+' sub</span>':'')+
+          '</div>'+
+          '<div>'+celdaEstado(it.estado, 'setItemAhora(\''+g.id+'\',\''+it.id+'\',\'estado\',this.value)')+'</div>'+
+          '<div>'+celdaPersona(it.resp, 'setItemAhora(\''+g.id+'\',\''+it.id+'\',\'resp\',this.value)')+'</div>'+
+          '<div><input class="fch-inp" type="date" value="'+esc(it.fecha||'')+'" '+
+            'onchange="setItemAhora(\''+g.id+'\',\''+it.id+'\',\'fecha\',this.value)"></div>'+
+          '<div><button class="bg-com'+(nCom?' hay':'')+'" onclick="toggleItem(\''+g.id+'\',\''+it.id+'\')">'+
+            (nCom||'')+'&#128172;</button></div>'+
+          '<div><button class="ico" onclick="delItemTab(\''+g.id+'\',\''+it.id+'\')" title="Borrar">&times;</button></div>'+
+        '</div>';
+        if(abierto) h += detalleItem(g, it);
+      });
+      h += '<div class="bg-add">'+
+        '<input class="inp" id="ni-'+g.id+'" placeholder="+ Agregar ítem" '+
+          'onkeydown="if(event.key===\'Enter\')addItem(\''+g.id+'\')">'+
+        '<button class="btn-sm" onclick="addItem(\''+g.id+'\')">Agregar</button></div>';
+      h += '</div>';
+    }
+    h += '</div>';
+  });
+  return h + '</div>';
+}
+function detalleItem(g, it){
+  let h = '<div class="bg-det">';
+  h += '<div class="bg-det-t">Subítems</div>';
+  if(it.subitems.length){
+    h += '<div class="bg-tabla sub">';
+    it.subitems.forEach(s=>{
+      h += '<div class="bg-row">'+
+        '<div class="bg-tx"><span class="bg-hijo">&#8627;</span>'+
+          '<input class="bg-item" value="'+esc(s.texto)+'" oninput="setSub(\''+g.id+'\',\''+it.id+'\',\''+s.id+'\',\'texto\',this.value)"></div>'+
+        '<div>'+celdaEstado(s.estado, 'setSubAhora(\''+g.id+'\',\''+it.id+'\',\''+s.id+'\',\'estado\',this.value)')+'</div>'+
+        '<div>'+celdaPersona(s.resp, 'setSubAhora(\''+g.id+'\',\''+it.id+'\',\''+s.id+'\',\'resp\',this.value)')+'</div>'+
+        '<div><input class="fch-inp" type="date" value="'+esc(s.fecha||'')+'" '+
+          'onchange="setSubAhora(\''+g.id+'\',\''+it.id+'\',\''+s.id+'\',\'fecha\',this.value)"></div>'+
+        '<div></div>'+
+        '<div><button class="ico" onclick="delSub(\''+g.id+'\',\''+it.id+'\',\''+s.id+'\')" title="Borrar">&times;</button></div>'+
+      '</div>';
+    });
+    h += '</div>';
+  }
+  h += '<div class="bg-add sub"><input class="inp" id="ns-'+it.id+'" placeholder="+ Agregar subítem" '+
+    'onkeydown="if(event.key===\'Enter\')addSub(\''+g.id+'\',\''+it.id+'\')">'+
+    '<button class="btn-sm" onclick="addSub(\''+g.id+'\',\''+it.id+'\')">Agregar</button></div>';
+
+  h += '<div class="bg-det-t" style="margin-top:14px">Comentarios</div>';
+  h += it.comentarios.length
+    ? '<div class="bg-coms">'+it.comentarios.map(c=>
+        '<div class="bg-com-i"><div class="bg-com-h"><b>'+esc(c.autor||'yo')+'</b><span>'+c.fecha+'</span>'+
+        '<button class="ico" onclick="delComentario(\''+g.id+'\',\''+it.id+'\',\''+c.id+'\')" title="Borrar">&times;</button></div>'+
+        '<div class="bg-com-tx">'+toHtml(c.texto)+'</div></div>').join('')+'</div>'
+    : '<div class="hint">Sin comentarios todavía.</div>';
+  h += '<div class="bg-add"><input class="inp" id="nc-'+it.id+'" placeholder="Escribí un comentario…" '+
+    'onkeydown="if(event.key===\'Enter\')addComentario(\''+g.id+'\',\''+it.id+'\')">'+
+    '<button class="btn-sm" onclick="addComentario(\''+g.id+'\',\''+it.id+'\')">Comentar</button></div>';
+  return h + '</div>';
+}
 
 /* ============================================================
    VISTA — Proyectos / Rocks / Tareas
@@ -1475,595 +1821,6 @@ function vPersonas(){
   return h + '</div>';
 }
 
-/* ============================================================
-   VISTA — Mis tareas (privada, no entra en el reporte)
-   ============================================================ */
-function marcasDisponibles(){
-  const set = [];
-  activos(S.cuentas).forEach(c=>{ if(!set.includes(c.nombre)) set.push(c.nombre); });
-  (S.tareas||[]).forEach(t=>{ const m = (t.marca||'').trim(); if(m && !set.includes(m)) set.push(m); });
-  return set.sort((a,b)=>a.localeCompare(b,'es'));
-}
-// la célula de una tarea sale de la cuenta que se llama igual que su marca
-function celulaDeMarca(nombre){
-  const c = S.cuentas.find(x=>x.nombre === (nombre||'').trim());
-  return c ? celulaDe(c) : '';
-}
-const esLiderT = t => (t.tipo || 'marca') === 'lider';
-
-/* La fecha se lee en palabras: "ayer" o "hace 4 días" dice mucho más que 21/08.
-   El color va con la urgencia, no con el calendario. */
-function fechaHumana(iso, hecha){
-  if(!iso) return {txt:'sin fecha', cls:'vacia'};
-  const hoy = parseISO(isoDate(new Date()));
-  const d = Math.round((parseISO(iso) - hoy) / 86400000);
-  if(hecha) return {txt:d === 0 ? 'hoy' : (iso.slice(8)+'/'+iso.slice(5,7)), cls:'list'};
-  if(d < -1)  return {txt:'hace '+(-d)+' días', cls:'roja'};
-  if(d === -1) return {txt:'ayer', cls:'roja'};
-  if(d === 0)  return {txt:'hoy', cls:'naranja'};
-  if(d === 1)  return {txt:'mañana', cls:'prox'};
-  if(d <= 7)   return {txt:DIA_CORTO[(parseISO(iso).getDay()+6)%7]+' '+parseISO(iso).getDate(), cls:'prox'};
-  return {txt:iso.slice(8)+'/'+iso.slice(5,7), cls:''};
-}
-function proximoLunes(){
-  const d = new Date(), falta = (8 - ((d.getDay()+6)%7 + 1)) % 7 || 7;
-  return isoDate(addDays(d, falta));
-}
-function ponerFecha(id, iso){ setTarea(id,'fecha',iso); fechaEdit = null; saveNow(); render(); }
-function toggleFecha(id){ fechaEdit = fechaEdit === id ? null : id; tarDetOpen[id] = false; render(); }
-function toggleDet(id){ tarDetOpen[id] = !tarDetOpen[id]; fechaEdit = null; render(); }
-function vTareas(){
-  const hoy = isoDate(new Date());
-  const todas = S.tareas || [];
-  const pend = todas.filter(t=>!t.hecha).length;
-  const venc = todas.filter(t=>!t.hecha && t.fecha && t.fecha < hoy).length;
-  const hoyN = todas.filter(t=>!t.hecha && t.fecha === hoy).length;
-
-  let h = vTareasResumen();
-  h += '<div class="section"><div class="section-hdr">'+
-    '<div class="section-title"><span class="dot"></span>Mis tareas <span class="pill" style="margin-left:4px">privado</span></div>'+
-    '<div style="display:flex;gap:6px;flex-wrap:wrap">'+
-      selFiltro('fTar', fTar, [['pend','Pendientes'],['todas','Todas'],['venc','Vencidas'],['hechas','Hechas']])+
-    '</div></div>'+
-    '<div class="section-body filtros-tar">'+
-      '<span class="flt-lbl">Filtrar por</span>'+
-      selFiltro('fTarTipo', fTarTipo, [['todos','Marca y líder'],['marca','Solo de marca'],['lider','Solo de líder']])+
-      selFiltro('fTarCel', fTarCel, [['todas','Todas las células']].concat(celulas().map(c=>[c,c])))+
-      selFiltro('fTarMarca', fTarMarca, [['todas','Todas las marcas']].concat(marcasDisponibles().map(m=>[m,m])).concat([['_sin','Sin marca']]))+
-      ((fTarTipo!=='todos'||fTarCel!=='todas'||fTarMarca!=='todas')
-        ? '<button class="btn-ghost" onclick="fTarTipo=\'todos\';fTarCel=\'todas\';fTarMarca=\'todas\';render()">Limpiar</button>' : '')+
-    '</div>'+
-    '<div class="section-body" style="padding:11px 18px;border-bottom:1px solid var(--border)">'+
-      '<div class="hint">Tu lista de pendientes del día a día. <b style="color:var(--text2)">No entra en el reporte del 1:1</b> ni en nada que compartas.'+
-      (todas.length ? ' &nbsp;·&nbsp; <b style="color:var(--text2)">'+pend+'</b> pendientes'+
-        (venc?' · <span style="color:#ef6b6b"><b>'+venc+'</b> vencidas</span>':'')+
-        (hoyN?' · <b style="color:var(--text2)">'+hoyN+'</b> para hoy':'') : '')+
-      '</div></div>';
-
-  h += '<div class="add-ini no-print"><div class="add-ini-hdr">Nueva tarea</div>'+
-    '<datalist id="dl-marcas">'+marcasDisponibles().map(m=>'<option value="'+esc(m)+'">').join('')+'</datalist>'+
-    '<div class="cfg-add" style="margin-top:0">'+
-      '<select class="inp" id="nt-tipo" style="flex:0 0 110px" onchange="ntTipo=this.value;render()">'+
-        '<option value="marca"'+(ntTipo==='marca'?' selected':'')+'>De marca</option>'+
-        '<option value="lider"'+(ntTipo==='lider'?' selected':'')+'>De líder</option></select>'+
-      (ntTipo === 'lider' ? ''
-        : '<input class="inp" id="nt-marca" list="dl-marcas" style="flex:0 0 170px" placeholder="Marca">')+
-      '<input class="inp" id="nt-titulo" placeholder="Tarea — qué hay que hacer" onkeydown="if(event.key===\'Enter\')addTarea()">'+
-      '<input class="inp" id="nt-fecha" type="date" style="flex:0 0 155px">'+
-      '<button class="btn-orange" onclick="addTarea()">Agregar</button>'+
-    '</div>'+
-    (ntDescOpen
-      ? '<textarea class="inp" id="nt-desc" style="margin-top:8px;min-height:44px" placeholder="Descripción (opcional)"></textarea>'
-      : '<button class="btn-ghost" style="margin-top:8px" onclick="toggleAltaDesc()">+ Descripción</button>')+
-    '</div>';
-
-  let lista = todas.filter(t=>{
-    const m = (t.marca||'').trim();
-    if(fTarTipo !== 'todos' && (esLiderT(t) ? 'lider' : 'marca') !== fTarTipo) return false;
-    if(fTarCel !== 'todas' && celulaDeMarca(m) !== fTarCel) return false;   // las de líder no tienen célula
-    if(fTarMarca === '_sin' && m) return false;
-    if(fTarMarca !== 'todas' && fTarMarca !== '_sin' && m !== fTarMarca) return false;
-    if(fTar === 'pend') return !t.hecha;
-    if(fTar === 'hechas') return !!t.hecha;
-    if(fTar === 'venc') return !t.hecha && t.fecha && t.fecha < hoy;
-    return true;
-  });
-  if(!lista.length){
-    h += '<div class="empty">'+(todas.length ? 'Ninguna tarea con ese filtro.' : 'Sin tareas todavía. Cargá la primera acá arriba.')+'</div></div>';
-    return h + vRecurrentes();
-  }
-
-  // agrupadas por marca; dentro, las que tienen fecha primero y más próxima arriba
-  const LIDER = 'Tareas de líder', SINM = '— Sin marca';
-  const grupos = [];
-  lista.forEach(t=>{
-    const m = esLiderT(t) ? LIDER : ((t.marca||'').trim() || SINM);
-    let g = grupos.find(x=>x.m === m);
-    if(!g){ g = {m:m, items:[], cel:esLiderT(t) ? '' : celulaDeMarca(t.marca)}; grupos.push(g); }
-    g.items.push(t);
-  });
-  const orden = m => m === LIDER ? 0 : (m === SINM ? 2 : 1);
-  grupos.sort((a,b)=> orden(a.m) - orden(b.m) || a.m.localeCompare(b.m,'es'));
-  grupos.forEach(g=> g.items.sort((a,b)=>
-    (a.hecha?1:0)-(b.hecha?1:0) || (a.fecha?0:1)-(b.fecha?0:1) || String(a.fecha||'').localeCompare(String(b.fecha||''))
-  ));
-
-  const cierre = () => vRecurrentes();
-  grupos.forEach(g=>{
-    const pendG = g.items.filter(t=>!t.hecha).length;
-    const vencG = g.items.filter(t=>!t.hecha && t.fecha && t.fecha < hoy).length;
-    const sinMarca = g.m === SINM, esLid = g.m === LIDER;
-    h += '<div class="grp-marca'+(sinMarca?' sin':'')+(esLid?' lider':'')+'">'+
-      '<span class="nm">'+esc(g.m)+'</span>'+
-      (g.cel ? '<span class="grp-cel">'+esc(g.cel)+'</span>' : '')+
-      '<span class="cnt">'+pendG+' pendiente'+(pendG===1?'':'s')+'</span>'+
-      (vencG ? '<span class="cnt venc">'+vencG+' vencida'+(vencG===1?'':'s')+'</span>' : '')+
-      '</div>';
-    g.items.forEach(t=>{
-      const vencida = !t.hecha && t.fecha && t.fecha < hoy;
-      const esHoy = !t.hecha && t.fecha === hoy;
-      const f = fechaHumana(t.fecha, t.hecha);
-      const conDesc = !!toText(t.desc), det = !!tarDetOpen[t.id], editandoNota = !!tarDescOpen[t.id];
-      h += '<div class="tr'+(t.hecha?' list':(vencida?' venc':(esHoy?' hoy':'')))+'">'+
-        '<input type="checkbox" class="chk" '+(t.hecha?'checked':'')+' onchange="toggleTarea(\''+t.id+'\')" title="Marcar como hecha">'+
-        '<div class="tr-mid">'+
-          '<input class="tr-tit" value="'+esc(t.titulo)+'" placeholder="Tarea" oninput="setTarea(\''+t.id+'\',\'titulo\',this.value)">'+
-          (editandoNota
-            ? '<div style="padding:6px 7px 0">'+
-                richBox('tar-'+t.id, t.desc, 'setTarea(\''+t.id+'\',\'desc\',richIn(this))', 'Nota…', 38)+
-                '<button class="btn-ghost" style="margin-top:5px" onclick="toggleTarDesc(\''+t.id+'\')">Listo</button></div>'
-            : (conDesc ? '<div class="tr-nota" onclick="toggleTarDesc(\''+t.id+'\')" title="Click para editar">'+toHtml(t.desc)+'</div>' : ''))+
-        '</div>'+
-        '<div class="tr-der">'+
-          (t.recId ? '<span class="rec-ico" title="Se repite sola">&#8635;</span>' : '')+
-          '<button class="fch '+f.cls+'" onclick="toggleFecha(\''+t.id+'\')" title="Cambiar la fecha">'+f.txt+'</button>'+
-          '<div class="tr-acc'+(det||editandoNota?' fija':'')+'">'+
-            '<button class="ico'+(conDesc||editandoNota?' on':'')+'" onclick="toggleTarDesc(\''+t.id+'\')" '+
-              'title="'+(conDesc?'Ver o editar la nota':'Agregar una nota')+'">&#9998;</button>'+
-            '<button class="ico" onclick="toggleDet(\''+t.id+'\')" title="Más opciones">'+(det?'&#9652;':'&#9662;')+'</button>'+
-          '</div>'+
-        '</div>'+
-      '</div>';
-      if(fechaEdit === t.id){
-        h += '<div class="fechas">'+
-          '<button onclick="ponerFecha(\''+t.id+'\',\''+hoy+'\')">Hoy</button>'+
-          '<button onclick="ponerFecha(\''+t.id+'\',\''+isoDate(addDays(new Date(),1))+'\')">Mañana</button>'+
-          '<button onclick="ponerFecha(\''+t.id+'\',\''+proximoLunes()+'\')">Próximo lunes</button>'+
-          '<button onclick="ponerFecha(\''+t.id+'\',\''+isoDate(addDays(new Date(),7))+'\')">En una semana</button>'+
-          '<input type="date" value="'+esc(t.fecha||'')+'" onchange="ponerFecha(\''+t.id+'\',this.value)">'+
-          (t.fecha ? '<button onclick="ponerFecha(\''+t.id+'\',\'\')">Sin fecha</button>' : '')+
-        '</div>';
-      }
-      if(det){
-        h += '<div class="tr-det">'+
-          '<div class="tr-det-fila"><span class="tr-det-lbl">Tipo</span>'+
-            '<button class="tipo-btn'+(esLiderT(t)?' lid':'')+'" onclick="cambiarTipoTarea(\''+t.id+'\')">'+
-              (esLiderT(t)?'De líder':'De marca')+'</button>'+
-            (esLiderT(t) ? '<span class="hint">No cuelga de ninguna marca</span>'
-              : '<input class="inp" list="dl-marcas" style="width:190px" value="'+esc(t.marca||'')+'" '+
-                'placeholder="Marca" oninput="setTarea(\''+t.id+'\',\'marca\',this.value)">')+
-          '</div>'+
-          '<div class="tr-det-fila"><span class="tr-det-lbl">Acciones</span>'+
-            btnAlUno(t.titulo + (t.marca?' ('+t.marca+')':''), toText(t.desc))+
-            '<button class="btn-danger" style="font-size:11px;padding:5px 11px" onclick="delTarea(\''+t.id+'\')">Borrar tarea</button>'+
-          '</div>'+
-        '</div>';
-      }
-    });
-  });
-  return h + '</div>' + cierre();
-}
-/* ============================================================
-   Gráficos de Mis tareas
-   Paleta validada con el script del skill de dataviz contra el
-   fondo real (#112240): naranja #f04e23 para "cerradas" (serie
-   única) y el par #3987e5 / #ef4444 para "a tiempo / vencidas"
-   (pasa banda de luminosidad, croma, separación CVD y contraste).
-   ============================================================ */
-const VIZ = {acc:'#f04e23', s1:'#3987e5', crit:'#ef4444',
-  grid:'rgba(255,255,255,.07)', axis:'#8892a4', surf:'#112240'};
-// rampa ordinal (un solo tono, validada con --ordinal sobre el navy): recién
-// abiertas apagadas, las más viejas más brillantes = las que hay que mirar
-const RAMPA = ['#1c5cab','#2a78d6','#5598e7','#9ec5f4'];
-const DIA_CORTO = ['lun','mar','mié','jue','vie','sáb','dom'];
-
-function tip(e, html){
-  const el = document.getElementById('viztip');
-  el.innerHTML = html; el.classList.add('on');
-  const r = el.getBoundingClientRect();
-  let x = e.clientX + 14, y = e.clientY - r.height - 10;
-  if(x + r.width > window.innerWidth - 8) x = e.clientX - r.width - 14;
-  if(y < 8) y = e.clientY + 18;
-  el.style.left = x+'px'; el.style.top = y+'px';
-}
-function tipOff(){ document.getElementById('viztip').classList.remove('on'); }
-
-// barra vertical: punta redondeada 4px, base cuadrada sobre la línea de cero
-function colPath(x,y,w,h,r){
-  if(h <= 0.5) return '';
-  r = Math.min(r, w/2, h);
-  return 'M'+x+','+(y+h)+' V'+(y+r)+' a'+r+','+r+' 0 0 1 '+r+',-'+r+
-         ' h'+(w-2*r)+' a'+r+','+r+' 0 0 1 '+r+','+r+' V'+(y+h)+' Z';
-}
-// barra horizontal: punta redondeada a la derecha, base cuadrada en el eje
-function rowPath(x,y,w,h,r){
-  if(w <= 0.5) return '';
-  r = Math.min(r, h/2, w);
-  return 'M'+x+','+y+' h'+(w-r)+' a'+r+','+r+' 0 0 1 '+r+','+r+
-         ' v'+(h-2*r)+' a'+r+','+r+' 0 0 1 '+(-r)+','+r+' H'+x+' Z';
-}
-const ticksLindos = max => {
-  if(max <= 1) return [0,1];
-  if(max <= 4) return [0, max];
-  const paso = Math.ceil(max/2);
-  return [0, paso, paso*2];
-};
-
-/* --- datos --- */
-function cerradasPorDia(){
-  const lunes = parseISO(wkKey(new Date()));
-  return DIA_CORTO.map((d,i)=>{
-    const f = isoDate(addDays(lunes,i));
-    return {dia:d, fecha:f, n:(S.tareas||[]).filter(t=>t.hecha && t.cerrada === f).length};
-  });
-}
-function cerradasPorSemana(n){
-  const out = []; let k = wkKey(new Date());
-  for(let i=0;i<n;i++){
-    const ini = k, fin = isoDate(addDays(parseISO(k),6));
-    out.unshift({k:k, sem:wkNum(k),
-      n:(S.tareas||[]).filter(t=>t.hecha && t.cerrada && t.cerrada >= ini && t.cerrada <= fin).length});
-    k = shiftKey(k,-1);
-  }
-  return out;
-}
-function pendientesPorMarca(){
-  const hoy = isoDate(new Date()), mapa = [];
-  (S.tareas||[]).filter(t=>!t.hecha).forEach(t=>{
-    const m = (t.marca||'').trim() || 'Sin marca';
-    let g = mapa.find(x=>x.m === m);
-    if(!g){ g = {m:m, alDia:0, venc:0}; mapa.push(g); }
-    if(t.fecha && t.fecha < hoy) g.venc++; else g.alDia++;
-  });
-  mapa.forEach(g=> g.tot = g.alDia + g.venc);
-  mapa.sort((a,b)=> b.tot - a.tot || b.venc - a.venc);
-  if(mapa.length > 6){                       // el resto se pliega en "Otras", no se generan colores nuevos
-    const resto = mapa.splice(6);
-    mapa.push({m:'Otras ('+resto.length+')', alDia:resto.reduce((s,x)=>s+x.alDia,0),
-      venc:resto.reduce((s,x)=>s+x.venc,0), tot:resto.reduce((s,x)=>s+x.tot,0)});
-  }
-  return mapa;
-}
-
-/* --- gráfico 1: cerradas por día (serie única) --- */
-function vizPorDia(){
-  const datos = cerradasPorDia();
-  const hoy = isoDate(new Date());
-  const total = datos.reduce((s,d)=>s+d.n,0);
-  if(!total) return '<div class="viz-empty">Todavía no cerraste ninguna tarea esta semana.<br>'+
-    '<span style="font-size:11px">Cuando tildes una, aparece acá el día en que la cerraste.</span></div>';
-  const W = 640, H = 136, pl = 26, pr = 6, pt = 20, pb = 22;  // formato bajo y ancho; pt deja aire a la etiqueta del máximo
-  const max = Math.max(...datos.map(d=>d.n));
-  const tk = ticksLindos(max), tope = tk[tk.length-1];
-  const banda = (W-pl-pr)/7, bw = Math.min(18, banda-10);
-  const yDe = v => pt + (H-pt-pb) * (1 - v/tope);
-  let s = '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Tareas cerradas por día de esta semana">';
-  tk.forEach(v=>{
-    s += '<line x1="'+pl+'" y1="'+yDe(v)+'" x2="'+(W-pr)+'" y2="'+yDe(v)+'" stroke="'+VIZ.grid+'" stroke-width="1"/>'+
-      '<text x="'+(pl-7)+'" y="'+(yDe(v)+3.5)+'" text-anchor="end" font-size="9.5" fill="'+VIZ.axis+'">'+v+'</text>';
-  });
-  datos.forEach((d,i)=>{
-    const x = pl + banda*i + (banda-bw)/2, y = yDe(d.n), h = yDe(0)-y;
-    const esHoy = d.fecha === hoy;
-    if(d.n) s += '<path d="'+colPath(x,y,bw,h,4)+'" fill="'+VIZ.acc+'"/>';
-    if(d.n === max && d.n > 0)
-      s += '<text x="'+(x+bw/2)+'" y="'+(y-6)+'" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--text)">'+d.n+'</text>';
-    s += '<text x="'+(x+bw/2)+'" y="'+(H-9)+'" text-anchor="middle" font-size="10" '+
-      'fill="'+(esHoy?'var(--text)':VIZ.axis)+'" font-weight="'+(esHoy?700:500)+'">'+d.dia+'</text>';
-    s += '<rect x="'+(pl+banda*i)+'" y="'+pt+'" width="'+banda+'" height="'+(H-pt-pb)+'" fill="transparent" '+
-      'onmousemove="tip(event,\'<b>'+d.dia+' '+d.fecha.slice(8)+'/'+d.fecha.slice(5,7)+'</b><br>'+d.n+' tarea'+(d.n===1?'':'s')+' cerrada'+(d.n===1?'':'s')+'\')" onmouseleave="tipOff()"/>';
-  });
-  s += '<line x1="'+pl+'" y1="'+yDe(0)+'" x2="'+(W-pr)+'" y2="'+yDe(0)+'" stroke="rgba(255,255,255,.16)" stroke-width="1"/>';
-  return s + '</svg>';
-}
-
-/* --- gráfico 2: pendientes por marca (2 series: estado) --- */
-function vizPorMarca(){
-  const datos = pendientesPorMarca();
-  if(!datos.length) return '<div class="viz-empty">No tenés tareas pendientes. 👌</div>';
-  const W = 640, fila = 22, pt = 3, pr = 32, anchoNom = 130;
-  const H = pt + datos.length*fila + 3;
-  const max = Math.max(...datos.map(d=>d.tot));
-  const escala = (W - anchoNom - pr) / Math.max(1,max);
-  const bh = 14;
-  let s = '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Tareas pendientes por marca, separadas entre a tiempo y vencidas">';
-  datos.forEach((d,i)=>{
-    const y = pt + i*fila, yb = y + (fila-bh)/2;
-    const wA = d.alDia*escala, wV = d.venc*escala;
-    const nom = d.m.length > 19 ? d.m.slice(0,18)+'…' : d.m;
-    s += '<text x="2" y="'+(yb+bh/2+3.5)+'" font-size="10.5" fill="var(--text2)">'+esc(nom)+'</text>';
-    // 2px de aire entre los dos tramos: los separa el fondo, no un borde.
-    // Solo la punta del apilado va redondeada; el tramo interior queda a escuadra.
-    if(wA > 0.5) s += (wV > 0.5
-      ? '<rect x="'+anchoNom+'" y="'+yb+'" width="'+Math.max(0,wA-2)+'" height="'+bh+'" fill="'+VIZ.s1+'"/>'
-      : '<path d="'+rowPath(anchoNom, yb, wA, bh, 4)+'" fill="'+VIZ.s1+'"/>');
-    if(wV > 0.5) s += '<path d="'+rowPath(anchoNom+wA, yb, wV, bh, 4)+'" fill="'+VIZ.crit+'"/>';
-    s += '<text x="'+(anchoNom+wA+wV+7)+'" y="'+(yb+bh/2+3.5)+'" font-size="10.5" font-weight="700" fill="var(--text)">'+d.tot+'</text>';
-    s += '<rect x="0" y="'+y+'" width="'+W+'" height="'+fila+'" fill="transparent" '+
-      'onmousemove="tip(event,'+jsArg('<b>'+esc(d.m)+'</b>')+'+\'<br>'+
-        '<span class=&quot;k&quot;><i style=&quot;background:'+VIZ.s1+'&quot;></i>'+d.alDia+' a tiempo</span><br>'+
-        '<span class=&quot;k&quot;><i style=&quot;background:'+VIZ.crit+'&quot;></i>'+d.venc+' vencida'+(d.venc===1?'':'s')+'</span>\')" '+
-      'onmouseleave="tipOff()"/>';
-  });
-  return s + '</svg>';
-}
-
-/* --- gráfico 3: cerradas por semana (serie única) --- */
-function vizPorSemana(){
-  const datos = cerradasPorSemana(8);
-  const total = datos.reduce((s,d)=>s+d.n,0);
-  if(!total) return '<div class="viz-empty">Sin historial todavía. A medida que cierres tareas vas a ver acá la evolución semana a semana.</div>';
-  const W = 640, H = 136, pl = 26, pr = 6, pt = 20, pb = 22;  // formato bajo y ancho; pt deja aire a la etiqueta del máximo
-  const max = Math.max(...datos.map(d=>d.n));
-  const tk = ticksLindos(max), tope = tk[tk.length-1];
-  const banda = (W-pl-pr)/datos.length, bw = Math.min(18, banda-10);
-  const yDe = v => pt + (H-pt-pb) * (1 - v/tope);
-  const actual = wkNum(wkKey(new Date()));
-  let s = '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Tareas cerradas por semana en las últimas ocho semanas">';
-  tk.forEach(v=>{
-    s += '<line x1="'+pl+'" y1="'+yDe(v)+'" x2="'+(W-pr)+'" y2="'+yDe(v)+'" stroke="'+VIZ.grid+'" stroke-width="1"/>'+
-      '<text x="'+(pl-7)+'" y="'+(yDe(v)+3.5)+'" text-anchor="end" font-size="9.5" fill="'+VIZ.axis+'">'+v+'</text>';
-  });
-  datos.forEach((d,i)=>{
-    const x = pl + banda*i + (banda-bw)/2, y = yDe(d.n), h = yDe(0)-y;
-    const esActual = d.sem === actual;
-    if(d.n) s += '<path d="'+colPath(x,y,bw,h,4)+'" fill="'+VIZ.acc+'"/>';
-    if(esActual && d.n)
-      s += '<text x="'+(x+bw/2)+'" y="'+(y-6)+'" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--text)">'+d.n+'</text>';
-    s += '<text x="'+(x+bw/2)+'" y="'+(H-9)+'" text-anchor="middle" font-size="9.5" '+
-      'fill="'+(esActual?'var(--text)':VIZ.axis)+'" font-weight="'+(esActual?700:500)+'">S'+d.sem+'</text>';
-    s += '<rect x="'+(pl+banda*i)+'" y="'+pt+'" width="'+banda+'" height="'+(H-pt-pb)+'" fill="transparent" '+
-      'onmousemove="tip(event,\'<b>Semana '+d.sem+'</b><br>'+d.n+' tarea'+(d.n===1?'':'s')+' cerrada'+(d.n===1?'':'s')+'\')" onmouseleave="tipOff()"/>';
-  });
-  s += '<line x1="'+pl+'" y1="'+yDe(0)+'" x2="'+(W-pr)+'" y2="'+yDe(0)+'" stroke="rgba(255,255,255,.16)" stroke-width="1"/>';
-  return s + '</svg>';
-}
-
-/* --- gráfico 4: antigüedad de las pendientes (bandas ordenadas, rampa de un tono) --- */
-function antiguedadPendientes(){
-  const ahora = new Date();
-  const bandas = [{n:'≤ 7 días'},{n:'8 a 14'},{n:'15 a 30'},{n:'+30 días'}].map(b=>({n:b.n, c:0, ej:null}));
-  let sinFecha = 0;
-  (S.tareas||[]).filter(t=>!t.hecha).forEach(t=>{
-    const base = t.creada || t.fecha;
-    if(!base){ sinFecha++; return; }
-    const dias = Math.max(0, Math.floor((ahora - parseISO(base))/86400000));
-    const i = dias <= 7 ? 0 : dias <= 14 ? 1 : dias <= 30 ? 2 : 3;
-    bandas[i].c++;
-    if(!bandas[i].ej || dias > bandas[i].ej.d) bandas[i].ej = {t:t.titulo, d:dias};
-  });
-  bandas.sinFecha = sinFecha;
-  return bandas;
-}
-function vizAntiguedad(){
-  const datos = antiguedadPendientes();
-  const total = datos.reduce((s,b)=>s+b.c,0);
-  if(!total) return '<div class="viz-empty">Sin pendientes abiertas. 👌</div>';
-  const W = 640, H = 136, pl = 26, pr = 6, pt = 20, pb = 22;
-  const max = Math.max(...datos.map(b=>b.c));
-  const tk = ticksLindos(max), tope = tk[tk.length-1];
-  const banda = (W-pl-pr)/datos.length, bw = Math.min(30, banda-26);
-  const yDe = v => pt + (H-pt-pb) * (1 - v/tope);
-  let s = '<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Tareas pendientes según cuántos días llevan abiertas">';
-  tk.forEach(v=>{
-    s += '<line x1="'+pl+'" y1="'+yDe(v)+'" x2="'+(W-pr)+'" y2="'+yDe(v)+'" stroke="'+VIZ.grid+'" stroke-width="1"/>'+
-      '<text x="'+(pl-6)+'" y="'+(yDe(v)+3.5)+'" text-anchor="end" font-size="9" fill="'+VIZ.axis+'">'+v+'</text>';
-  });
-  datos.forEach((b,i)=>{
-    const x = pl + banda*i + (banda-bw)/2, y = yDe(b.c), h = yDe(0)-y;
-    if(b.c) s += '<path d="'+colPath(x,y,bw,h,4)+'" fill="'+RAMPA[i]+'"/>';
-    if(b.c === max && b.c > 0)
-      s += '<text x="'+(x+bw/2)+'" y="'+(y-6)+'" text-anchor="middle" font-size="10" font-weight="700" fill="var(--text)">'+b.c+'</text>';
-    s += '<text x="'+(x+bw/2)+'" y="'+(H-7)+'" text-anchor="middle" font-size="9.5" fill="'+VIZ.axis+'">'+b.n+'</text>';
-    const ej = b.ej ? '<br><span style=&quot;color:#8892a4&quot;>la más vieja: '+
-      jsArg(esc(b.ej.t.slice(0,28))).slice(1,-1)+' ('+b.ej.d+' d)</span>' : '';
-    s += '<rect x="'+(pl+banda*i)+'" y="'+pt+'" width="'+banda+'" height="'+(H-pt-pb)+'" fill="transparent" '+
-      'onmousemove="tip(event,\'<b>'+b.n+' abiertas</b><br>'+b.c+' tarea'+(b.c===1?'':'s')+ej+'\')" onmouseleave="tipOff()"/>';
-  });
-  s += '<line x1="'+pl+'" y1="'+yDe(0)+'" x2="'+(W-pr)+'" y2="'+yDe(0)+'" stroke="rgba(255,255,255,.16)" stroke-width="1"/>';
-  return s + '</svg>';
-}
-
-function vizTablaHtml(){
-  const dia = cerradasPorDia(), sem = cerradasPorSemana(8), mar = pendientesPorMarca();
-  const t = (titulo, cabeceras, filas) =>
-    '<div style="margin-bottom:14px"><div class="viz-t" style="margin-bottom:6px">'+titulo+'</div>'+
-    '<table><thead><tr>'+cabeceras.map((c,i)=>'<th'+(i?' class="n"':'')+'>'+c+'</th>').join('')+'</tr></thead><tbody>'+
-    filas.map(f=>'<tr>'+f.map((c,i)=>'<td'+(i?' class="n"':'')+'>'+c+'</td>').join('')+'</tr>').join('')+
-    '</tbody></table></div>';
-  const ant = antiguedadPendientes();
-  return '<div class="viz-tabla section-body" style="border-top:1px solid var(--border)">'+
-    t('Cerradas por día', ['Día','Cerradas'], dia.map(d=>[d.dia+' '+d.fecha.slice(8)+'/'+d.fecha.slice(5,7), d.n]))+
-    t('Pendientes por marca', ['Marca','A tiempo','Vencidas','Total'], mar.length?mar.map(m=>[esc(m.m), m.alDia, m.venc, m.tot]):[['—',0,0,0]])+
-    t('Antigüedad de las pendientes', ['Abiertas hace','Tareas'], ant.map(b=>[b.n, b.c]).concat(ant.sinFecha?[['sin fecha de alta', ant.sinFecha]]:[]))+
-    t('Cerradas por semana', ['Semana','Cerradas'], sem.map(d=>['S'+d.sem, d.n]))+
-  '</div>';
-}
-
-function vTareasResumen(){
-  const hoy = isoDate(new Date());
-  const lunes = wkKey(new Date()), domingo = isoDate(addDays(parseISO(lunes),6));
-  const T = S.tareas || [];
-  const hechasSem = T.filter(t=>t.hecha && t.cerrada && t.cerrada >= lunes && t.cerrada <= domingo).length;
-  const lunPrev = shiftKey(lunes,-1), domPrev = isoDate(addDays(parseISO(lunPrev),6));
-  const hechasPrev = T.filter(t=>t.hecha && t.cerrada && t.cerrada >= lunPrev && t.cerrada <= domPrev).length;
-  const pendientes = T.filter(t=>!t.hecha).length;
-  const vencidas = T.filter(t=>!t.hecha && t.fecha && t.fecha < hoy).length;
-  const paraHoy = T.filter(t=>!t.hecha && t.fecha === hoy).length;
-  const delSem = T.filter(t=>t.fecha && t.fecha >= lunes && t.fecha <= domingo);
-  const cumpl = delSem.length ? Math.round(delSem.filter(t=>t.hecha).length/delSem.length*100) : null;
-  const dif = hechasSem - hechasPrev;
-
-  let h = '<div class="section"><div class="section-hdr">'+
-    '<div class="section-title"><span class="dot"></span>Resumen de la semana</div>'+
-    '<div style="display:flex;gap:6px;align-items:center">'+
-      '<span class="hint">Sem '+wkNum(lunes)+' · '+wkLabel(lunes)+'</span>'+
-      '<button class="btn-sm" onclick="vizTabla=!vizTabla;render()">'+(vizTabla?'Ver gráficos':'Ver números')+'</button>'+
-      '<button class="btn-sm" onclick="vizOpen=!vizOpen;render()">'+(vizOpen?'Ocultar':'Mostrar')+'</button>'+
-    '</div></div>';
-  if(!vizOpen) return h + '</div>';
-
-  h += '<div class="section-body" style="padding:12px 18px 0"><div class="kpi-row compacta" style="margin-bottom:4px">'+
-    kpi('Hechas esta semana', hechasSem,
-      (hechasPrev || hechasSem) ? (dif>0?'+'+dif:dif)+' vs. semana pasada' : 'primera semana', hechasSem?'ok':'')+
-    kpi('Pendientes', pendientes, (T.length-pendientes)+' cerradas en total', pendientes?'acc':'ok')+
-    kpi('Vencidas', vencidas, vencidas?'pasaron su fecha':'ninguna atrasada', vencidas?'bad':'ok')+
-    kpi('Para hoy', paraHoy, paraHoy?'con fecha de hoy':'nada agendado para hoy', paraHoy?'warn':'')+
-    kpi('Cumplimiento', cumpl==null?'—':cumpl+'%',
-      cumpl==null?'sin tareas con fecha':delSem.filter(t=>t.hecha).length+' de '+delSem.length+' con fecha esta semana',
-      cumpl==null?'':(cumpl>=80?'ok':(cumpl>=50?'warn':'bad')))+
-  '</div></div>';
-
-  if(vizTabla) return h + vizTablaHtml() + '</div>';
-
-  h += '<div class="viz-grid">'+
-    '<div class="viz"><div class="viz-hdr"><div class="viz-t">Cerradas por día</div>'+
-      '<div class="viz-s">Cuándo descargás la semana</div></div>'+vizPorDia()+'</div>'+
-    '<div class="viz"><div class="viz-hdr"><div class="viz-t">Cerradas por semana</div>'+
-      '<div class="viz-s">Últimas 8 semanas</div></div>'+vizPorSemana()+'</div>'+
-    '<div class="viz"><div class="viz-hdr"><div class="viz-t">Pendientes por marca</div>'+
-      '<div class="viz-s">Dónde está la mochila hoy</div></div>'+
-      '<div class="viz-legend">'+
-        '<span class="viz-key"><i style="background:'+VIZ.s1+'"></i>A tiempo</span>'+
-        '<span class="viz-key"><i style="background:'+VIZ.crit+'"></i>Vencidas</span>'+
-      '</div>'+vizPorMarca()+'</div>'+
-    '<div class="viz"><div class="viz-hdr"><div class="viz-t">Antigüedad de las pendientes</div>'+
-      '<div class="viz-s">Hace cuánto están abiertas — cuanto más claro, más viejo</div></div>'+vizAntiguedad()+'</div>'+
-  '</div>';
-  return h + '</div>';
-}
-
-/* --- tareas que se repiten solas --- */
-const FRECS = [['diaria','Todos los días'],['habiles','Lunes a viernes'],['semanal','Una vez por semana']];
-const DIAS = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
-function generarRecurrentes(){
-  const hoy = isoDate(new Date());
-  const dow = new Date().getDay();
-  let cambio = false;
-  (S.recurrentes||[]).forEach(r=>{
-    if(!r.activa) return;
-    if(r.ultimaGen === hoy) return;                                  // ya se corrió hoy
-    if(r.freq === 'habiles' && (dow === 0 || dow === 6)) return;      // fin de semana
-    if(r.freq === 'semanal' && dow !== +r.dia) return;                // no es su día
-    // si quedó una pendiente de días anteriores, la corremos a hoy en vez de duplicarla
-    const pendiente = S.tareas.find(t=>t.recId === r.id && !t.hecha);
-    if(pendiente) pendiente.fecha = hoy;
-    else S.tareas.push({id:uid(), titulo:r.titulo, tipo:r.tipo || (r.marca?'marca':'lider'),
-      marca:r.marca||'', fecha:hoy, desc:r.desc||'', hecha:false, recId:r.id, creada:hoy});
-    r.ultimaGen = hoy; cambio = true;
-  });
-  if(cambio) saveNow();
-}
-function addRec(){
-  const t = document.getElementById('nr-titulo').value.trim();
-  if(!t){ toast('Ponele un nombre'); return; }
-  const mr = document.getElementById('nr-marca').value.trim();
-  S.recurrentes.push({id:uid(), titulo:t,
-    tipo: mr ? 'marca' : 'lider',        // sin marca, es una rutina propia
-    marca:mr,
-    freq:document.getElementById('nr-freq').value,
-    dia:document.getElementById('nr-dia').value || 1,
-    desc:'', activa:true, ultimaGen:''});
-  saveNow(); generarRecurrentes(); render(); toast('Listo, se va a crear sola');
-}
-function setRec(id,f,v){
-  const r = S.recurrentes.find(x=>x.id===id); if(!r) return;
-  r[f] = v;
-  if(f === 'activa' && v) r.ultimaGen = '';   // al reactivar, que pueda crearse hoy
-  saveNow(); generarRecurrentes(); render();
-}
-function delRec(id){
-  const r = S.recurrentes.find(x=>x.id===id);
-  if(!r || !confirm('¿Dejar de repetir "'+r.titulo+'"?\n\nLas tareas que ya se crearon quedan como están.')) return;
-  S.recurrentes = S.recurrentes.filter(x=>x.id!==id); saveNow(); render();
-}
-function vRecurrentes(){
-  let h = '<div class="section"><div class="section-hdr">'+
-    '<div class="section-title"><span class="dot"></span>Se repiten solas</div>'+
-    '<span class="hint">La app las crea sola el día que corresponde</span></div>';
-  h += (S.recurrentes||[]).length ? '<div class="section-body">'+S.recurrentes.map(r=>{
-    const freqTxt = r.freq === 'semanal' ? 'Todos los '+DIAS[+r.dia] : FRECS.find(f=>f[0]===r.freq)[1];
-    return '<div class="cfg-row'+(r.activa?'':' arch')+'">'+
-      '<span class="rec-ico">&#8635;</span>'+
-      '<input class="inp nm" value="'+esc(r.titulo)+'" oninput="setRecTexto(\''+r.id+'\',\'titulo\',this.value)">'+
-      '<input class="inp" list="dl-marcas" style="width:150px" placeholder="Marca (opcional)" value="'+esc(r.marca||'')+'" '+
-        'oninput="setRecTexto(\''+r.id+'\',\'marca\',this.value)">'+
-      '<select class="inp" style="width:150px" onchange="setRec(\''+r.id+'\',\'freq\',this.value)">'+
-        FRECS.map(f=>'<option value="'+f[0]+'"'+(r.freq===f[0]?' selected':'')+'>'+f[1]+'</option>').join('')+'</select>'+
-      (r.freq === 'semanal' ? '<select class="inp" style="width:120px" onchange="setRec(\''+r.id+'\',\'dia\',this.value)">'+
-        DIAS.map((d,i)=>'<option value="'+i+'"'+(+r.dia===i?' selected':'')+'>'+d+'</option>').join('')+'</select>' : '')+
-      '<span class="hint" style="min-width:100px">'+(r.activa?freqTxt:'pausada')+'</span>'+
-      '<button class="btn-ghost" onclick="setRec(\''+r.id+'\',\'activa\','+(!r.activa)+')">'+(r.activa?'Pausar':'Reanudar')+'</button>'+
-      '<button class="mini" onclick="delRec(\''+r.id+'\')" title="Quitar">&times;</button>'+
-    '</div>';
-  }).join('')+'</div>'
-  : '<div class="empty">Ninguna todavía. Cargá una acá abajo y aparece sola cada día en tu lista.</div>';
-  h += '<div class="add-ini no-print"><div class="add-ini-hdr">Nueva tarea que se repite</div>'+
-    '<div class="cfg-add" style="margin-top:0">'+
-      '<input class="inp" id="nr-titulo" placeholder="Revisar calendario / envíos" onkeydown="if(event.key===\'Enter\')addRec()">'+
-      '<input class="inp" id="nr-marca" list="dl-marcas" style="flex:0 0 170px" placeholder="Marca (opcional)">'+
-      '<select class="inp" id="nr-freq" style="flex:0 0 160px" onchange="document.getElementById(\'nr-dia\').style.display=this.value===\'semanal\'?\'\':\'none\'">'+
-        FRECS.map(f=>'<option value="'+f[0]+'">'+f[1]+'</option>').join('')+'</select>'+
-      '<select class="inp" id="nr-dia" style="flex:0 0 130px;display:none">'+
-        DIAS.map((d,i)=>'<option value="'+i+'"'+(i===1?' selected':'')+'>'+d+'</option>').join('')+'</select>'+
-      '<button class="btn-orange" onclick="addRec()">Agregar</button>'+
-    '</div></div>';
-  return h + '</div>';
-}
-function setRecTexto(id,f,v){ const r = S.recurrentes.find(x=>x.id===id); if(r){ r[f] = v; save(); } }
-
-function addTarea(){
-  const tit = document.getElementById('nt-titulo').value.trim();
-  if(!tit){ toast('Ponele un nombre a la tarea'); return; }
-  const d = document.getElementById('nt-desc'), m = document.getElementById('nt-marca');
-  S.tareas.push({id:uid(), titulo:tit, tipo:ntTipo,
-    marca:(ntTipo === 'lider' || !m) ? '' : m.value.trim(),
-    fecha:document.getElementById('nt-fecha').value,
-    desc:d ? d.value.trim() : '',
-    hecha:false, creada:isoDate(new Date())});
-  ntDescOpen = false;
-  saveNow(); render(); toast('Tarea agregada');
-}
-function setTarea(id,f,v){ const t = S.tareas.find(x=>x.id===id); if(t){ t[f] = v; save(); } }
-function toggleTarDesc(id){ tarDescOpen[id] = !tarDescOpen[id]; render(); }
-function cambiarTipoTarea(id){
-  const t = S.tareas.find(x=>x.id===id); if(!t) return;
-  if(esLiderT(t)){
-    t.tipo = 'marca';
-    if(!t.marca && t.marcaPrev){ t.marca = t.marcaPrev; delete t.marcaPrev; }  // la recupera si venía de una
-  } else {
-    t.tipo = 'lider';
-    if(t.marca){ t.marcaPrev = t.marca; t.marca = ''; }   // no cuelga de ninguna marca, pero la recordamos
-  }
-  saveNow(); render();
-}
-function toggleAltaDesc(){ ntDescOpen = !ntDescOpen; render(); }
-function toggleTarea(id){
-  const t = S.tareas.find(x=>x.id===id);
-  if(!t) return;
-  t.hecha = !t.hecha; t.cerrada = t.hecha ? isoDate(new Date()) : '';
-  saveNow(); render();
-  // con el filtro en "pendientes" la tarea desaparece de la vista: que se pueda volver
-  if(t.hecha && fTar === 'pend')
-    toastAccion('Hecha: '+(t.titulo.length>32?t.titulo.slice(0,30)+'…':t.titulo), 'Deshacer', function(){
-      t.hecha = false; t.cerrada = ''; saveNow(); render();
-    });
-}
-function delTarea(id){
-  const t = S.tareas.find(x=>x.id===id);
-  if(!t || !confirm('¿Borrar la tarea "'+t.titulo+'"?')) return;
-  S.tareas = S.tareas.filter(x=>x.id!==id); saveNow(); render();
-}
 
 /* ============================================================
    VISTA — Evolución
@@ -2207,7 +1964,7 @@ function vConfig(){
   h += '</div></div>';
 
   /* datos */
-  const bytes = new Blob([JSON.stringify(S)]).size;
+  const bytes = new Blob([JSON.stringify(RAIZ)]).size;
   h += '<div class="section"><div class="section-hdr"><div class="section-title"><span class="dot"></span>Datos</div>'+
     '<span class="hint">'+Object.keys(S.semanas).filter(hasData).length+' semanas · '+(bytes/1024).toFixed(1)+' KB · versión '+VERSION+'</span></div><div class="section-body">'+
     '<div class="hint" style="margin-bottom:12px">Todo se guarda solo en <b>Supabase</b>, asociado a tu cuenta '+
@@ -2215,7 +1972,7 @@ function vConfig(){
     'Este navegador guarda además una copia local por si te quedás sin internet en medio de la carga.<br>'+
     'El respaldo en archivo ya no es obligatorio, pero sirve para tener una foto fuera de Supabase '+
     '(por ejemplo antes de un borrado masivo). Último: <b>'+textoRespaldo()+
-    (S.ultimoBackup ? ' ('+S.ultimoBackup+')' : '')+'</b></div>'+
+    (RAIZ.ultimoBackup ? ' ('+RAIZ.ultimoBackup+')' : '')+'</b></div>'+
     '<div style="display:flex;gap:8px;flex-wrap:wrap">'+
       '<button class="btn-orange" onclick="exportJSON()">Exportar respaldo (.json)</button>'+
       '<button class="btn-sm" onclick="document.getElementById(\'fileimp\').click()">Importar respaldo</button>'+
@@ -2299,13 +2056,8 @@ function copiarPrev(){
       if(!to.avance) to.avance = so.avance || 0;
     });
   });
-  (pw.temas||[]).filter(t=>!t.ok).forEach(t=>{
-    // se trae el tema y mis notas; lo hablado en la reunión anterior no, es de esa semana
-    if(!W(true).temas.some(x=>x.txt === t.txt))
-      W(true).temas.push({id:uid(), txt:t.txt, ok:false, nota:t.nota||'', reunion:''});
-  });
   saveNow(); render();
-  toast('Estados, avances y temas pendientes traídos de la semana anterior');
+  toast('Estados y avances traídos de la semana anterior');
 }
 
 /* ---------- reporte de la semana ---------- */
@@ -2378,13 +2130,22 @@ function buildResumen(){
   }
   const al = alertas();
   if(al.length){ L.push('## ALERTAS'); al.forEach(a=>L.push('- '+a.txt.replace(/<[^>]+>/g,''))); L.push(''); }
-  const tem = (w.temas||[]);
-  if(tem.length){
-    L.push('## TEMAS PARA EL 1:1');
-    tem.forEach(t=>{
-      L.push('- ['+(t.ok?'x':' ')+'] '+t.txt);
-      if(toText(t.nota)) L.push('    Mis notas: '+linea(t.nota));
-      if(toText(t.reunion)) L.push('    Hablado: '+linea(t.reunion));
+  // el tablero: solo lo que está abierto, que es lo que hay para hablar
+  const grupos = (T().grupos||[]).filter(g=>g.items.length);
+  if(grupos.length){
+    L.push('## TABLERO');
+    grupos.forEach(g=>{
+      L.push('### '+g.nombre);
+      g.items.forEach(it=>{
+        const e = estadoDe(it.estado), quien = nombrePersona(it.resp);
+        L.push('- ['+(e?e.n:'sin estado')+'] '+it.texto+
+          (quien?' · '+quien:'')+(it.fecha?' · '+it.fecha:''));
+        it.subitems.forEach(s=>{
+          const se = estadoDe(s.estado);
+          L.push('    · '+s.texto+' ['+(se?se.n:'—')+']'+(nombrePersona(s.resp)?' · '+nombrePersona(s.resp):''));
+        });
+        it.comentarios.slice(-2).forEach(c=> L.push('    💬 '+c.fecha+': '+linea(c.texto)));
+      });
     });
     L.push('');
   }
@@ -2445,11 +2206,17 @@ function buscar(qRaw){
     p.objetivos.forEach(o=>{ if(nombreCoincide(o.nombre) || nombreCoincide(o.meta))
       res.push({tipo:'Objetivo', titulo:o.nombre, ctx:p.nombre, frag:esc(o.meta||''), tab:'personas', orden:1}); });
   });
-  (S.tareas||[]).forEach(t=>{
-    if(nombreCoincide(t.titulo) || nombreCoincide(t.marca))
-      res.push({tipo:'Tarea', titulo:t.titulo, ctx:[t.marca, t.fecha, t.hecha?'hecha':'pendiente'].filter(Boolean).join(' · '),
-        frag:toText(t.desc)?fragmento(t.desc,q):'', tab:'tareas', marca:(t.marca||'').trim(), orden:1});
-    else pega(t.desc, {tipo:'Tarea', titulo:t.titulo, ctx:t.marca||'', tab:'tareas', marca:(t.marca||'').trim(), orden:2});
+  // el tablero de seguimiento
+  (T().grupos||[]).forEach(g=>{
+    (g.items||[]).forEach(it=>{
+      const donde = g.nombre;
+      if(nombreCoincide(it.texto))
+        res.push({tipo:'Ítem', titulo:it.texto, ctx:donde, frag:'', tab:'resumen', orden:1});
+      (it.subitems||[]).forEach(s=>{ if(nombreCoincide(s.texto))
+        res.push({tipo:'Subítem', titulo:s.texto, ctx:donde+' › '+it.texto, frag:'', tab:'resumen', orden:1}); });
+      (it.comentarios||[]).forEach(c=> pega(c.texto,
+        {tipo:'Comentario', titulo:it.texto, ctx:donde+' · '+c.fecha, tab:'resumen', orden:2}));
+    });
   });
 
   // historial semanal
@@ -2516,15 +2283,14 @@ function irAResultado(i){
   if(r.cta) openCta = r.cta;
   if(r.tab === 'cuentas'){ fCel = 'todas'; fCta = 'todas'; qCta = ''; }
   if(r.tab === 'proyectos') fProy = 'todos';
-  if(r.tab === 'tareas'){ fTar = 'todas'; fTarMarca = r.marca || 'todas'; }
   tab = r.tab;
   cerrarBuscar(); render(); window.scrollTo({top:0,behavior:'smooth'});
 }
 
 /* ---------- respaldo en archivo (opcional, ahora que hay nube) ---------- */
 function diasSinRespaldo(){
-  if(!S.ultimoBackup) return null;                 // nunca exportó
-  return Math.floor((new Date() - parseISO(S.ultimoBackup)) / 86400000);
+  if(!RAIZ.ultimoBackup) return null;                 // nunca exportó
+  return Math.floor((new Date() - parseISO(RAIZ.ultimoBackup)) / 86400000);
 }
 function textoRespaldo(){
   const d = diasSinRespaldo();
@@ -2537,7 +2303,7 @@ function textoRespaldo(){
 }
 /* ---------- export / import ---------- */
 function exportJSON(){
-  S.ultimoBackup = isoDate(new Date());   // se sella dentro del propio archivo, antes de generarlo
+  RAIZ.ultimoBackup = isoDate(new Date());   // se sella dentro del propio archivo, antes de generarlo
   const blob = new Blob([JSON.stringify(S,null,2)], {type:'application/json'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -2555,11 +2321,9 @@ function importFile(input){
       const d = JSON.parse(ev.target.result);
       if(!d || !d.v) throw new Error('formato');
       if(!confirm('Esto reemplaza todos los datos actuales por los del archivo. ¿Seguir?')) return;
-      S = d; S.cuentas = S.cuentas||[]; S.personas = S.personas||[]; S.inis = S.inis||[]; S.semanas = S.semanas||{};
-      S.tareas = S.tareas||[]; S.recurrentes = S.recurrentes||[];
-      S.personas.forEach(p=>p.objetivos = p.objetivos||[]);
+      RAIZ = normalizar(d); apuntarEspacio();
       // acabás de importar: existe un archivo de respaldo, no hay que avisar de cero
-      if(!S.ultimoBackup) S.ultimoBackup = isoDate(new Date());
+      if(!RAIZ.ultimoBackup) RAIZ.ultimoBackup = isoDate(new Date());
       saveNow(); render(); toast('Respaldo importado');
     }catch(e){ toast('Archivo inválido'); }
   };
@@ -2569,11 +2333,16 @@ function borrarSemana(){
   if(!confirm('¿Borrar todo lo cargado en la semana '+wkNum(cur)+'?')) return;
   delete S.semanas[cur]; saveNow(); render(); toast('Semana borrada');
 }
+// Borra solo el espacio en el que estás parado: el otro equipo no tiene por
+// qué desaparecer porque vaciaste este.
 function borrarTodo(){
-  if(!confirm('Esto borra TODO: cuentas, personas, proyectos e histórico completo.\n\n'+
-    'Y lo borra también en la nube, no solo en este navegador.\n\n¿Seguro? (conviene exportar antes)')) return;
-  if(!confirm('Última confirmación: se pierde todo el histórico, en todos tus dispositivos.')) return;
-  S = blank(); saveNow(); render(); toast('Todo borrado');
+  const donde = S.nombre || RAIZ.activo;
+  if(!confirm('Esto borra TODO lo de '+donde+': cuentas, personas, proyectos, tablero e histórico.\n\n'+
+    'El otro espacio no se toca. Se borra también en la nube, no solo en este navegador.\n\n'+
+    '¿Seguro? (conviene exportar antes)')) return;
+  if(!confirm('Última confirmación: se pierde todo el histórico de '+donde+', en todos tus dispositivos.')) return;
+  RAIZ.espacios[RAIZ.activo] = Object.assign(blank(), {nombre:donde});
+  apuntarEspacio(); saveNow(); render(); toast('Se vació '+donde);
 }
 
 /* ---------- datos de ejemplo ---------- */
@@ -2710,13 +2479,13 @@ function arrancar(){
       }
       if(!r.data) primeraVez();
       else {
-        S = normalizar(r.data.datos); VERSION = r.data.version;
+        RAIZ = normalizar(r.data.datos); apuntarEspacio(); VERSION = r.data.version;
         const meta = leerMeta(), local = leerLocal();
         // había cambios locales sin subir de una sesión anterior
         if(meta.pendiente && local && tieneContenido(local) && meta.version >= VERSION){
           if(confirm('Quedaron cambios en este navegador que nunca llegaron a la nube.\n\n'+
                      'Aceptar: los subo y pisan lo que hay en la nube.\nCancelar: uso lo de la nube y descarto lo local.')){
-            S = local; abrirApp(); saveNow(); return;
+            RAIZ = local; apuntarEspacio(); abrirApp(); saveNow(); return;
           }
         }
         abrirApp(); guardarLocal(false);
@@ -2732,12 +2501,12 @@ function primeraVez(){
              'Encontré datos guardados en este navegador. ¿Los subo a la nube?\n\n'+
              'Aceptar: los subo y quedan disponibles desde cualquier dispositivo.\n'+
              'Cancelar: arranco vacío (los locales no se borran).')){
-    S = local;
+    RAIZ = local; apuntarEspacio();
   }
-  sb.from('seg_estado').insert({user_id:UID, datos:S, version:1}).select('version').then(function(r){
+  sb.from('seg_estado').insert({user_id:UID, datos:RAIZ, version:1}).select('version').then(function(r){
     if(r.error){ alert('No pude crear tu registro en la nube: '+r.error.message); return; }
     VERSION = 1; guardarLocal(false); abrirApp(); marcarSync('ok');
-    toast(tieneContenido(S) ? 'Datos subidos a la nube' : 'Listo, ya guarda en la nube');
+    toast(tieneContenido(RAIZ) ? 'Datos subidos a la nube' : 'Listo, ya guarda en la nube');
   });
 }
 function abrirApp(){
@@ -2745,7 +2514,6 @@ function abrirApp(){
   document.getElementById('app-shell').classList.add('on');
   document.getElementById('user-pill').textContent = MAIL;
   marcarSync('ok');
-  generarRecurrentes();
   render();
 }
 
