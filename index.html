@@ -72,6 +72,16 @@ button,input,select,textarea{font-family:inherit}
 .sync.choque i{background:var(--amber)}
 @keyframes lat{0%,100%{opacity:.35}50%{opacity:1}}
 .user-pill{font-size:11px;color:var(--text3);background:var(--bg2);border:1px solid var(--border);padding:5px 11px;border-radius:20px;white-space:nowrap}
+.ac-mail{flex:1;min-width:180px;font-size:13px;font-family:var(--code);color:var(--text)}
+.ajeno{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:600;padding:4px 6px 4px 12px;
+  border-radius:20px;background:rgba(122,158,202,.16);border:1px solid rgba(122,158,202,.4);color:#a8c6e8;white-space:nowrap}
+.ajeno button{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;border:none;cursor:pointer;
+  background:rgba(255,255,255,.12);color:inherit}
+.ajeno button:hover{background:rgba(255,255,255,.24)}
+/* solo lectura: se puede navegar y buscar, pero nada que escriba responde */
+.ro .main input,.ro .main select,.ro .main textarea,.ro .main [contenteditable]{pointer-events:none}
+.ro .main button:not(.tab):not(.btn-sm){pointer-events:none;opacity:.45}
+.ro .sem,.ro .est-sel{cursor:default}
 
 .buscador{width:210px;font-size:12px;padding:7px 12px;border-radius:20px}
 @media(max-width:1200px){.buscador{width:150px}}
@@ -606,6 +616,7 @@ mark{background:rgba(240,78,35,.28);color:#fff;border-radius:3px;padding:0 2px}
     <button class="btn-sm" onclick="copiarPrev()" title="Traer estados y avances de la semana anterior">Copiar semana anterior</button>
     <input class="inp buscador" id="q-global" type="search" placeholder="Buscar en todo el historial…"
       onkeydown="if(event.key==='Enter')buscar(this.value)" onsearch="buscar(this.value)">
+    <span id="ajeno"></span>
     <span class="user-pill" id="user-pill"></span>
     <button class="btn-sm" onclick="salir()">Salir</button>
   </div>
@@ -618,6 +629,7 @@ mark{background:rgba(240,78,35,.28);color:#fff;border-radius:3px;padding:0 2px}
   <div class="pane" id="pane-cuentas"></div>
   <div class="pane" id="pane-personas"></div>
   <div class="pane" id="pane-evolucion"></div>
+  <div class="pane" id="pane-accesos"></div>
   <div class="pane" id="pane-config"></div>
 </div>
 </div>
@@ -692,6 +704,11 @@ const COLORES_GRUPO = ['#f04e23','#3987e5','#22c55e','#f59e0b','#9085e9','#e87ba
 let RAIZ = blankRaiz();
 let S = RAIZ.espacios[RAIZ.activo];
 let UID = null, MAIL = '', VERSION = 0, sincro = 'ok', reintento = null;
+/* DUENO = de quién es el documento abierto (el mío o uno compartido conmigo).
+   ROL = 'dueno' | 'editor' | 'lector'. Todo lo que escribe pasa por puedeEditar(). */
+let DUENO = null, ROL = 'dueno', COMPARTIDOS = [], ACCESOS = [];
+const esDueno = () => ROL === 'dueno';
+const puedeEditar = () => ROL === 'dueno' || ROL === 'editor';
 let tab = 'resumen';
 let cur = wkKey(new Date());
 let openCta = null;
@@ -780,8 +797,20 @@ function tieneContenido(raiz){
 
 /* ---------- guardado en la nube ---------- */
 let _t = null;
-function save(){ guardarLocal(true); clearTimeout(_t); _t = setTimeout(saveNow, 900); }
-function saveNow(){ clearTimeout(_t); guardarLocal(true); subir(); }
+let _avisoRO = 0;
+function save(){
+  if(!puedeEditar()) return avisarSoloLectura();
+  guardarLocal(true); clearTimeout(_t); _t = setTimeout(saveNow, 900);
+}
+function saveNow(){
+  if(!puedeEditar()) return avisarSoloLectura();
+  clearTimeout(_t); guardarLocal(true); subir();
+}
+function avisarSoloLectura(){
+  if(Date.now() - _avisoRO < 4000) return;      // un aviso, no uno por tecla
+  _avisoRO = Date.now();
+  toast('Tenés acceso de solo lectura a este tablero');
+}
 
 function marcarSync(estado){
   sincro = estado;
@@ -805,7 +834,7 @@ function subir(){
   const nueva = VERSION + 1;
   sb.from('seg_estado')
     .update({datos:RAIZ, version:nueva, actualizado:new Date().toISOString()})
-    .eq('user_id', UID).eq('version', VERSION).select('version')
+    .eq('user_id', DUENO || UID).eq('version', VERSION).select('version')
     .then(function(r){
       if(r.error){ marcarSync('mal'); reintento = setTimeout(subir, 8000); return; }
       if(!r.data || !r.data.length){ marcarSync('choque'); return; }  // otro dispositivo guardó primero
@@ -1087,6 +1116,7 @@ function tabsHtml(){
     ['cuentas','Cuentas', ctaRojo],
     ['personas','Personas', perRisk],
     ['evolucion','Evolución', null],
+    ['accesos','Accesos', null],
     ['config','Config', null]
   ];
   return defs.map(d=>{
@@ -1116,6 +1146,9 @@ function render(){
     else if(ae.dataset && ae.dataset.k) foco = ae.dataset.k;   // chips de semáforo
   }
   document.getElementById('tabs').innerHTML = tabsHtml();
+  document.getElementById('ajeno').innerHTML = esDueno() ? '' :
+    '<span class="ajeno">Tablero de otra persona'+(ROL==='lector'?' · solo lectura':'')+
+    '<button onclick="volverAlMio()">Ir al mío</button></span>';
   document.getElementById('esp-sw').innerHTML = ESPACIOS.map(e=>
     '<button class="'+(RAIZ.activo===e.k?'on':'')+'" onclick="cambiarEspacio(\''+e.k+'\')">'+
     esc(RAIZ.espacios[e.k].nombre || e.n)+'</button>').join('');
@@ -1133,7 +1166,7 @@ function render(){
   const pane = document.getElementById('pane-'+tab);
   pane.classList.add('active');
   pane.innerHTML = ({resumen:vResumen, proyectos:vProyectos, cuentas:vCuentas, personas:vPersonas,
- evolucion:vEvolucion, config:vConfig})[tab]();
+ evolucion:vEvolucion, accesos:vAccesos, config:vConfig})[tab]();
   if(foco){
     const el = pane.querySelector('.rich[data-k="'+foco+'"] .rich-body') || pane.querySelector('[data-k="'+foco+'"]');
     if(el){ el.focus(); if(el.classList.contains('rich-body')) placeCaretEnd(el); }
@@ -2167,6 +2200,84 @@ function fallbackCopy(txt,msg){
 }
 
 /* ============================================================
+   VISTA — Accesos
+   ============================================================ */
+function darAcceso(){
+  const mail = (document.getElementById('ac-mail').value || '').trim().toLowerCase();
+  const rol = document.getElementById('ac-rol').value;
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail)){ toast('Ese mail no parece válido'); return; }
+  if(mail === (MAIL||'').toLowerCase()){ toast('Ese sos vos, ya tenés acceso'); return; }
+  sb.from('seg_accesos').upsert({dueno:UID, email:mail, rol:rol}, {onConflict:'dueno,email'})
+    .then(function(r){
+      if(r.error){ toast('No se pudo: '+r.error.message); return; }
+      document.getElementById('ac-mail').value = '';
+      cargarAccesos(); render(); toast('Listo, '+mail+' ya puede entrar');
+    });
+}
+function cambiarRol(mail, rol){
+  sb.from('seg_accesos').update({rol:rol}).eq('dueno', UID).eq('email', mail).then(function(r){
+    if(r.error){ toast('No se pudo cambiar el rol: '+r.error.message); return; }
+    cargarAccesos();
+  });
+}
+function quitarAcceso(mail){
+  if(!confirm('¿Sacarle el acceso a '+mail+'?\n\nDeja de ver tu tablero en cuanto recargue.')) return;
+  sb.from('seg_accesos').delete().eq('dueno', UID).eq('email', mail).then(function(r){
+    if(r.error){ toast('No se pudo: '+r.error.message); return; }
+    cargarAccesos(); render(); toast('Acceso quitado');
+  });
+}
+function vAccesos(){
+  let h = '';
+  if(!esDueno()){
+    return '<div class="section"><div class="section-hdr"><div class="section-title">'+
+      '<span class="dot"></span>Accesos</div></div><div class="empty">'+
+      'Estás viendo un tablero compartido. Los accesos los administra su dueño.</div></div>';
+  }
+  h += '<div class="section"><div class="section-hdr">'+
+    '<div class="section-title"><span class="dot"></span>Quién puede entrar a tu tablero</div>'+
+    '<span class="hint">'+ACCESOS.length+' persona'+(ACCESOS.length===1?'':'s')+'</span></div>'+
+    '<div class="section-body">'+
+    '<div class="hint" style="margin-bottom:12px">Cargá el mail de la persona y, cuando entre con su cuenta '+
+    '(la misma de slots y el semáforo), va a ver <b>este</b> tablero en vez del suyo.<br>'+
+    '<b style="color:var(--amber)">El acceso es a todo el documento</b>: quien entra ve los dos espacios, '+
+    'Email Marketing y Paid Media. No se puede compartir uno solo.</div>';
+
+  h += ACCESOS.length ? ACCESOS.map(a=>
+    '<div class="cfg-row">'+
+      '<span class="ac-mail">'+esc(a.email)+'</span>'+
+      '<select class="inp" style="width:150px" onchange="cambiarRol('+jsArg(a.email)+',this.value)">'+
+        '<option value="editor"'+(a.rol==='editor'?' selected':'')+'>Puede editar</option>'+
+        '<option value="lector"'+(a.rol==='lector'?' selected':'')+'>Solo lectura</option>'+
+      '</select>'+
+      '<span class="hint" style="min-width:90px">desde '+String(a.creado||'').slice(0,10)+'</span>'+
+      '<button class="mini" onclick="quitarAcceso('+jsArg(a.email)+')" title="Quitar acceso">&times;</button>'+
+    '</div>').join('')
+    : '<div class="hint">Todavía no compartiste el tablero con nadie.</div>';
+
+  h += '<div class="cfg-add">'+
+    '<input class="inp" id="ac-mail" type="email" placeholder="mail@we-are.com.ar" '+
+      'onkeydown="if(event.key===\'Enter\')darAcceso()">'+
+    '<select class="inp" id="ac-rol" style="flex:0 0 160px">'+
+      '<option value="editor">Puede editar</option><option value="lector">Solo lectura</option></select>'+
+    '<button class="btn-orange" onclick="darAcceso()">Dar acceso</button></div>';
+  h += '<div class="hint" style="margin-top:12px">La persona tiene que tener cuenta en el Supabase de We Are. '+
+    'Si nunca entró a slots ni al semáforo, primero hay que crearle el usuario ahí.</div>';
+  h += '</div></div>';
+
+  if(COMPARTIDOS.length){
+    h += '<div class="section"><div class="section-hdr"><div class="section-title">'+
+      '<span class="dot" style="background:var(--blue)"></span>Tableros que compartieron conmigo</div></div>'+
+      '<div class="section-body">'+
+      COMPARTIDOS.map(c=>'<div class="cfg-row"><span class="ac-mail">Tablero de otro usuario</span>'+
+        '<span class="pill">'+(c.rol==='editor'?'puedo editar':'solo lectura')+'</span>'+
+        '<button class="btn-sm" onclick="abrirCompartido('+jsArg(c.dueno)+')">Abrirlo</button></div>').join('')+
+      '</div></div>';
+  }
+  return h;
+}
+
+/* ============================================================
    Buscador global — atraviesa todas las semanas y solapas
    ============================================================ */
 let _resultados = [];
@@ -2468,29 +2579,67 @@ function arrancar(){
     if(!u){ mostrarLogin(); return; }
     UID = u.id; MAIL = u.email || '';
     try{ localStorage.setItem(LS_META, JSON.stringify(Object.assign(leerMeta(), {mail:MAIL}))); }catch(e){}
-    sb.from('seg_estado').select('datos,version').eq('user_id', UID).maybeSingle().then(function(r){
-      if(r.error){
-        const faltaTabla = r.error.code === 'PGRST205' || /could not find the table|relation .* does not exist/i.test(r.error.message||'');
-        errAuth(faltaTabla
-          ? 'Falta crear la tabla en Supabase: corré seguimiento-schema.sql en el SQL editor y volvé a entrar.'
-          : 'Entraste, pero no pude leer tus datos: '+r.error.message);
-        mostrarLogin();
-        return;
-      }
-      if(!r.data) primeraVez();
-      else {
-        RAIZ = normalizar(r.data.datos); apuntarEspacio(); VERSION = r.data.version;
-        const meta = leerMeta(), local = leerLocal();
-        // había cambios locales sin subir de una sesión anterior
-        if(meta.pendiente && local && tieneContenido(local) && meta.version >= VERSION){
-          if(confirm('Quedaron cambios en este navegador que nunca llegaron a la nube.\n\n'+
-                     'Aceptar: los subo y pisan lo que hay en la nube.\nCancelar: uso lo de la nube y descarto lo local.')){
-            RAIZ = local; apuntarEspacio(); abrirApp(); saveNow(); return;
-          }
+    // Qué tableros tengo a mano: el mío y los que me compartieron.
+    sb.from('seg_accesos').select('dueno,rol').then(function(ra){
+      COMPARTIDOS = (ra && ra.data ? ra.data : []).filter(a=>a.dueno !== UID);
+      sb.from('seg_estado').select('datos,version').eq('user_id', UID).maybeSingle().then(function(r){
+        if(r.error){
+          const faltaTabla = r.error.code === 'PGRST205' || /could not find the table|relation .* does not exist/i.test(r.error.message||'');
+          errAuth(faltaTabla
+            ? 'Falta crear la tabla en Supabase: corré seguimiento-schema.sql en el SQL editor y volvé a entrar.'
+            : 'Entraste, pero no pude leer tus datos: '+r.error.message);
+          mostrarLogin();
+          return;
         }
-        abrirApp(); guardarLocal(false);
-      }
+        if(r.data){
+          DUENO = UID; ROL = 'dueno';
+          RAIZ = normalizar(r.data.datos); apuntarEspacio(); VERSION = r.data.version;
+          const meta = leerMeta(), local = leerLocal();
+          // había cambios locales sin subir de una sesión anterior
+          if(meta.pendiente && local && tieneContenido(local) && meta.version >= VERSION){
+            if(confirm('Quedaron cambios en este navegador que nunca llegaron a la nube.\n\n'+
+                       'Aceptar: los subo y pisan lo que hay en la nube.\nCancelar: uso lo de la nube y descarto lo local.')){
+              RAIZ = local; apuntarEspacio(); abrirApp(); saveNow(); return;
+            }
+          }
+          abrirApp(); guardarLocal(false); cargarAccesos();
+          return;
+        }
+        // no tengo documento propio: si me compartieron uno, entro a ese
+        if(COMPARTIDOS.length) return abrirCompartido(COMPARTIDOS[0].dueno);
+        primeraVez();
+      });
     });
+  });
+}
+/* Abre el documento de otra persona. El local sigue siendo el mío, así que
+   NO se cachea: si no, al volver a mi tablero me ofrecería "recuperar" lo ajeno. */
+function abrirCompartido(dueno){
+  const acc = COMPARTIDOS.find(a=>a.dueno === dueno);
+  sb.from('seg_estado').select('datos,version').eq('user_id', dueno).maybeSingle().then(function(r){
+    if(r.error || !r.data){
+      toast('No pude abrir ese tablero'+(r.error?': '+r.error.message:''));
+      return;
+    }
+    DUENO = dueno; ROL = acc ? acc.rol : 'lector';
+    RAIZ = normalizar(r.data.datos); apuntarEspacio(); VERSION = r.data.version;
+    abrirApp(); cargarAccesos();
+    toast('Estás viendo un tablero compartido'+(ROL==='lector'?' (solo lectura)':''));
+  });
+}
+function volverAlMio(){
+  DUENO = UID; ROL = 'dueno';
+  sb.from('seg_estado').select('datos,version').eq('user_id', UID).maybeSingle().then(function(r){
+    if(r.error || !r.data){ toast('No pude volver a tu tablero'); return; }
+    RAIZ = normalizar(r.data.datos); apuntarEspacio(); VERSION = r.data.version;
+    abrirApp(); guardarLocal(false); cargarAccesos();
+  });
+}
+function cargarAccesos(){
+  if(!esDueno()){ ACCESOS = []; return; }
+  sb.from('seg_accesos').select('email,rol,creado').eq('dueno', UID).then(function(r){
+    ACCESOS = (r && r.data) ? r.data.sort((a,b)=>a.email.localeCompare(b.email)) : [];
+    if(tab === 'accesos') render();
   });
 }
 function primeraVez(){
@@ -2513,6 +2662,7 @@ function abrirApp(){
   document.getElementById('auth').classList.remove('on');
   document.getElementById('app-shell').classList.add('on');
   document.getElementById('user-pill').textContent = MAIL;
+  document.getElementById('app-shell').classList.toggle('ro', ROL === 'lector');
   marcarSync('ok');
   render();
 }
