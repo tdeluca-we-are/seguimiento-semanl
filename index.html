@@ -711,6 +711,20 @@ mark{background:rgba(240,78,35,.28);color:#fff;border-radius:3px;padding:0 2px}
     <img id="iso-auth" class="auth-iso" alt="">
     <div class="auth-logo"><span class="logo-we">We</span> <span class="logo-are">Are</span></div>
     <div class="auth-t">Seguimiento semanal</div>
+
+    <div id="auth-clave" style="display:none">
+      <div class="auth-t" style="color:var(--text);font-weight:600;margin-bottom:16px">
+        Bienvenido. Elegí tu contraseña para entrar.</div>
+      <div class="fld"><label>Contraseña nueva</label>
+        <input class="inp" id="nc-pass" type="password" autocomplete="new-password" placeholder="Mínimo 8 caracteres"></div>
+      <div class="fld"><label>Repetila</label>
+        <input class="inp" id="nc-pass2" type="password" autocomplete="new-password"
+          onkeydown="if(event.key==='Enter')definirClave()"></div>
+      <button class="auth-btn" id="nc-btn" onclick="definirClave()">Guardar y entrar</button>
+      <div class="auth-err" id="nc-err"></div>
+    </div>
+
+    <div id="auth-normal">
     <div class="fld"><label>Email</label>
       <input class="inp" id="au-mail" type="email" autocomplete="username" placeholder="tuusuario@we-are.com.ar"></div>
     <div class="fld"><label>Contraseña</label>
@@ -718,6 +732,7 @@ mark{background:rgba(240,78,35,.28);color:#fff;border-radius:3px;padding:0 2px}
         onkeydown="if(event.key==='Enter')entrarConClave()"></div>
     <button class="auth-btn" id="au-btn" onclick="entrarConClave()">Entrar</button>
     <div class="auth-err" id="au-err"></div>
+    </div>
     <div class="auth-pie">Es la misma cuenta del semáforo y de slots.<br>El dominio es <b>@we-are.com.ar</b>.</div>
   </div>
 </div>
@@ -794,7 +809,14 @@ mark{background:rgba(240,78,35,.28);color:#fff;border-radius:3px;padding:0 2px}
 
 const SB_URL  = 'https://ojzcxwhoinmljospgmfp.supabase.co';
 const SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qemN4d2hvaW5tbGpvc3BnbWZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5MDY5MTYsImV4cCI6MjA5MzQ4MjkxNn0.jmvVP3weuclrBpQJb57BwmHD77Ofy4CDe43cnmiSFCk';
+/* Se guarda el hash ANTES de crear el cliente: supabase-js lo consume y lo
+   borra de la URL al detectar la sesión, y ahí se pierde el tipo de link
+   (invite / recovery) y el error, que es justo lo que hay que mostrar. */
+const HASH0 = location.hash || '';
 const sb = window.supabase ? window.supabase.createClient(SB_URL, SB_ANON) : null;
+function paramHash(k){
+  try{ return new URLSearchParams(HASH0.replace(/^#/,'')).get(k) || ''; }catch(e){ return ''; }
+}
 
 const LS = 'seguimiento_v1';       // caché local: espejo de lo último conocido
 const LS_META = 'seguimiento_meta';
@@ -2765,6 +2787,32 @@ function salir(){
   }
   sb.auth.signOut().then(()=>location.reload());
 }
+/* Pantalla para quien llega desde un mail de invitación o de "olvidé mi
+   contraseña": Supabase ya lo dejó con sesión, pero sin contraseña propia. */
+function mostrarDefinirClave(){
+  document.getElementById('auth').classList.add('on');
+  document.getElementById('app-shell').classList.remove('on');
+  document.getElementById('auth-normal').style.display = 'none';
+  document.getElementById('auth-clave').style.display = '';
+  document.getElementById('nc-pass').focus();
+}
+function definirClave(){
+  const p1 = document.getElementById('nc-pass').value;
+  const p2 = document.getElementById('nc-pass2').value;
+  const err = document.getElementById('nc-err');
+  if(p1.length < 8){ err.textContent = 'Tiene que tener al menos 8 caracteres'; return; }
+  if(p1 !== p2){ err.textContent = 'Las dos contraseñas no coinciden'; return; }
+  err.textContent = '';
+  document.getElementById('nc-btn').disabled = true;
+  sb.auth.updateUser({password:p1}).then(function(r){
+    document.getElementById('nc-btn').disabled = false;
+    if(r.error){ err.textContent = r.error.message || 'No se pudo guardar'; return; }
+    document.getElementById('auth-clave').style.display = 'none';
+    document.getElementById('auth-normal').style.display = '';
+    arrancar();
+  });
+}
+
 function arrancar(){
   if(!sb){
     document.getElementById('au-err').textContent =
@@ -2865,7 +2913,26 @@ function abrirApp(){
   render();
 }
 
-sb ? sb.auth.getSession().then(function(r){ r.data.session ? arrancar() : mostrarLogin(); }) : arrancar();
+/* Arranque. Si el link del mail vino con error (vencido, ya usado), se muestra
+   el motivo en vez de una pantalla muda, que es lo que desconcierta. */
+if(!sb) arrancar();
+else {
+  const errLink = paramHash('error_description') || paramHash('error');
+  const tipoLink = paramHash('type');
+  if(errLink){
+    mostrarLogin();
+    const txt = decodeURIComponent(errLink).replace(/\+/g,' ');
+    errAuth(/expired|invalid/i.test(txt)
+      ? 'El link del mail ya venció o se usó. Pedile a Tomás que te lo mande de nuevo.'
+      : txt);
+  } else {
+    sb.auth.getSession().then(function(r){
+      if(r.data.session && (tipoLink === 'invite' || tipoLink === 'recovery')) mostrarDefinirClave();
+      else if(r.data.session) arrancar();
+      else mostrarLogin();
+    });
+  }
+}
 </script>
 </body>
 </html>
