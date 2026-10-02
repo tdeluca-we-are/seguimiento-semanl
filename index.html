@@ -37,13 +37,20 @@ button,input,select,textarea{font-family:inherit}
 /* Selector de espacio. A la vista solo está DONDE estás; el otro equipo queda
    detrás de "Cambiar" y de una confirmación. Además una franja del color del
    espacio cruza la pantalla: no hay forma de confundirse de equipo. */
-.esp-sw{display:inline-flex;align-items:center;gap:8px}
+.esp-sw{position:relative;display:inline-flex;align-items:center}
 .esp-actual{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:#fff;
-  background:var(--ec);padding:5px 14px;border-radius:20px;white-space:nowrap;letter-spacing:-.01em}
+  background:var(--ec);padding:6px 12px 6px 14px;border-radius:20px;white-space:nowrap;letter-spacing:-.01em;
+  border:none;cursor:pointer}
 .esp-actual i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.85);display:block;flex:none}
-.esp-otro{font-size:11px;font-weight:600;padding:5px 11px;border-radius:20px;cursor:pointer;
-  background:transparent;color:var(--text3);border:1px solid var(--border2);white-space:nowrap}
-.esp-otro:hover{color:var(--text);border-color:var(--text3)}
+.esp-actual b{font-size:10px;opacity:.8;font-weight:400}
+.esp-actual:hover{filter:brightness(1.08)}
+.menu-esp{min-width:210px}
+.menu-esp-i{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:none;
+  color:var(--text);font-size:13px;font-weight:600;padding:10px 13px;cursor:pointer}
+.menu-esp-i:hover{background:rgba(255,255,255,.07)}
+.menu-esp-i i{width:9px;height:9px;border-radius:50%;flex:none}
+.menu-esp-i span{margin-left:auto;font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em}
+.menu-esp-i.act{background:rgba(255,255,255,.05)}
 body::before{content:'';position:fixed;top:0;left:0;right:0;height:3px;background:var(--esp-color,var(--orange));z-index:500}
 .top-bar{border-top:3px solid transparent}
 /* ===== login ===== */
@@ -426,11 +433,50 @@ td.cell{text-align:center;padding:6px 8px}
   padding:2px 7px;border-radius:20px;flex:none;margin-top:1px}
 .empty{padding:26px 18px;text-align:center;color:var(--text3);font-size:12.5px;line-height:1.6}
 
+/* ===== menús propios (estado, responsable, espacio) ===== */
+.cel{position:relative}
+.cel-btn{border:none;background:none;cursor:pointer;font-family:var(--font);padding:0}
+.menu{position:absolute;top:calc(100% + 5px);left:50%;transform:translateX(-50%);z-index:400;
+  background:#15294a;border:1px solid var(--border);border-radius:var(--radius-lg);
+  box-shadow:0 12px 34px rgba(0,0,0,.55);overflow:hidden;min-width:168px;padding:5px}
+.esp-sw .menu{left:0;transform:none;top:calc(100% + 8px);padding:4px}
+.menu-est{display:flex;flex-direction:column;gap:4px}
+.menu-est-i{border:none;border-radius:7px;cursor:pointer;color:#fff;font-family:var(--font);font-size:10.5px;
+  font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:9px 12px;text-align:center}
+.menu-est-i:hover{filter:brightness(1.12)}
+.menu-est-i.vacio{background:transparent;border:1px dashed var(--text3);color:var(--text3);text-transform:none;
+  letter-spacing:0;font-weight:600}
+.menu-per{display:flex;flex-direction:column;gap:2px;min-width:196px}
+.menu-per-i{display:flex;align-items:center;gap:9px;background:none;border:none;border-radius:7px;cursor:pointer;
+  padding:6px 9px;text-align:left;width:100%}
+.menu-per-i:hover{background:rgba(255,255,255,.07)}
+.menu-per-i.act{background:rgba(240,78,35,.16)}
+.menu-per-n{font-size:12.5px;color:var(--text);font-weight:500}
+.menu-vacio{font-size:11.5px;color:var(--text3);padding:9px 11px;line-height:1.45}
+
+/* ===== automatizaciones ===== */
+.auto-pill{font-size:11px;font-weight:700;color:var(--amber);background:rgba(245,158,11,.14);
+  border:1px solid rgba(245,158,11,.4);border-radius:20px;padding:4px 10px;white-space:nowrap}
+.auto-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:9px 0;
+  border-bottom:1px solid rgba(255,255,255,.05)}
+.auto-row:last-of-type{border-bottom:none}
+.auto-row.off{opacity:.45}
+.auto-tx{font-size:12.5px;color:var(--text2)}
+.auto-sel{width:auto;min-width:130px;font-size:12px;padding:6px 10px}
+.sw-btn{width:36px;height:20px;border-radius:20px;border:1px solid var(--border2);background:var(--bg3);
+  cursor:pointer;position:relative;flex:none;padding:0;transition:background .15s,border-color .15s}
+.sw-btn i{position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:var(--text3);
+  transition:left .15s,background .15s;display:block}
+.sw-btn.on{background:rgba(34,197,94,.22);border-color:rgba(34,197,94,.55)}
+.sw-btn.on i{left:18px;background:var(--green)}
+
 /* ===== tablero estilo Monday ===== */
-.bg-grupo{border-bottom:1px solid rgba(255,255,255,.07)}
-.bg-grupo:last-child{border-bottom:none}
-.bg-hdr{display:flex;align-items:center;gap:8px;padding:9px 18px 9px 15px;
-  background:rgba(255,255,255,.055);border-left:4px solid var(--gc);border-bottom:1px solid rgba(0,0,0,.2)}
+/* cada grupo es una tarjeta con su color, como un board de Monday */
+.bg-grupo{margin:14px 18px;border:1px solid var(--border);border-radius:var(--radius-lg);overflow:visible;
+  background:var(--bg2);box-shadow:0 1px 0 rgba(0,0,0,.25)}
+.bg-hdr{display:flex;align-items:center;gap:9px;padding:11px 16px 11px 13px;
+  background:rgba(255,255,255,.04);border-left:5px solid var(--gc);
+  border-radius:var(--radius-lg) var(--radius-lg) 0 0;border-bottom:1px solid var(--border)}
 .bg-caret{background:none;border:none;color:var(--gc);cursor:pointer;font-size:12px;padding:2px 4px;line-height:1}
 .bg-caret.chico{color:var(--text3);font-size:10px}
 .bg-caret.chico:hover{color:var(--orange)}
@@ -445,20 +491,24 @@ td.cell{text-align:center;padding:6px 8px}
 .bg-acc .ico:first-child{color:var(--gc)}
 
 .bg-tabla{display:flex;flex-direction:column}
-.bg-row{display:grid;grid-template-columns:minmax(200px,1fr) 92px 140px 128px 46px 34px;gap:8px;
-  align-items:stretch;padding:0 18px 0 15px;border-bottom:1px solid rgba(255,255,255,.045);
-  border-left:4px solid transparent}
-.bg-row:last-child{border-bottom:none}
-.bg-row:hover{background:rgba(255,255,255,.03)}
-.bg-row>div{display:flex;align-items:center;min-width:0;padding:6px 0}
-.bg-row>div:nth-child(2){justify-content:center}   /* responsable */
-.bg-row>div:nth-child(3){padding:0}                /* estado: pintado a sangre */
-.bg-row>div:last-child{justify-content:center}
-.bg-head{font-size:9.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;
-  background:rgba(0,0,0,.14)}
-.bg-head>div{padding:8px 0}
-.bg-head>div:nth-child(2),.bg-head>div:nth-child(3),.bg-head>div:nth-child(4){justify-content:center}
-.bg-head:hover{background:rgba(0,0,0,.14)}
+.bg-row{display:grid;grid-template-columns:minmax(200px,1fr) 92px 148px 132px 46px 36px;
+  align-items:stretch;min-height:42px;border-bottom:1px solid rgba(255,255,255,.055);
+  border-left:5px solid transparent;padding-right:10px}
+.bg-row:last-child{border-bottom:none;border-radius:0 0 var(--radius-lg) var(--radius-lg)}
+.bg-row:hover{background:rgba(255,255,255,.035);border-left-color:var(--gc)}
+/* separadores finos entre columnas, como la grilla de Monday */
+.bg-row>div{display:flex;align-items:center;min-width:0;padding:6px 10px;
+  border-left:1px solid rgba(255,255,255,.05)}
+.bg-row>div:first-child{border-left:none;padding-left:8px}
+.bg-row>div:nth-child(2){justify-content:center;padding:6px 4px}   /* responsable */
+.bg-row>div:nth-child(3){padding:0}                               /* estado: pintado a sangre */
+.bg-row>div:nth-child(5),.bg-row>div:last-child{justify-content:center;padding:6px 2px}
+.bg-head{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;
+  background:rgba(0,0,0,.18)}
+.bg-head>div{padding:9px 10px;border-left-color:rgba(255,255,255,.04)}
+.bg-head>div:nth-child(2),.bg-head>div:nth-child(3),.bg-head>div:nth-child(4),
+.bg-head>div:nth-child(5){justify-content:center}
+.bg-head:hover{background:rgba(0,0,0,.18);border-left-color:transparent}
 .bg-tx{display:flex;align-items:center;gap:6px;min-width:0}
 .bg-item{flex:1;min-width:0;background:transparent;border:1px solid transparent;border-radius:6px;color:var(--text);
   font-size:13px;font-weight:500;padding:5px 7px;outline:none;text-overflow:ellipsis}
@@ -469,36 +519,41 @@ td.cell{text-align:center;padding:6px 8px}
   border-radius:50%;min-width:17px;height:17px;display:inline-flex;align-items:center;justify-content:center;
   white-space:nowrap;flex:none}
 .fch-inp{width:100%;font-family:var(--font);font-size:11.5px;border-radius:6px;outline:none;
-  border:1px solid var(--border2);padding:5px 7px;cursor:pointer;background:transparent;color:var(--text2)}
+  border:1px solid transparent;padding:5px 7px;cursor:pointer;background:transparent;color:var(--text2)}
 /* el estado llena la celda: bloque de color sólido, como en Monday */
-.est-sel{width:100%;height:100%;min-height:30px;font-family:var(--font);font-size:10.5px;font-weight:700;
-  letter-spacing:.04em;text-transform:uppercase;text-align:center;border:none;border-radius:0;outline:none;
-  cursor:pointer;-webkit-appearance:none;appearance:none;padding:6px 4px}
-.est-sel option{background:var(--bg3);color:var(--text);font-weight:500;text-transform:none;letter-spacing:0}
-.bg-row:hover .fch-inp{border-color:var(--border2);background:var(--bg3)}
+.est-btn{width:100%;height:100%;min-height:34px;font-size:10.5px;font-weight:700;letter-spacing:.04em;
+  text-transform:uppercase;text-align:center;color:#fff;display:flex;align-items:center;justify-content:center;
+  padding:6px 8px;line-height:1.25;transition:filter .12s}
+.est-btn:hover{filter:brightness(1.1)}
+.est-btn.vacio{color:var(--text3);text-transform:none;letter-spacing:0;font-weight:600;
+  box-shadow:inset 0 0 0 1px var(--border2)}
+.per-btn{display:flex;align-items:center;justify-content:center;width:100%}
+.bg-row:hover .fch-inp,.sub-row:hover .fch-inp{border-color:var(--border2);background:var(--bg3)}
 .fch-inp:focus{border-color:var(--orange);background:var(--bg3)}
 .bg-com{background:none;border:1px solid transparent;border-radius:6px;color:var(--text3);cursor:pointer;
   font-size:11px;font-weight:700;padding:4px 6px;white-space:nowrap}
 .bg-com:hover{color:var(--orange);border-color:var(--border2)}
 .bg-com.hay{color:var(--orange)}
-.bg-add{display:flex;gap:7px;padding:8px 18px 10px 44px;align-items:center}
+.bg-add{display:flex;gap:7px;padding:8px 14px 10px 32px;align-items:center;
+  border-radius:0 0 var(--radius-lg) var(--radius-lg)}
 .bg-add .inp{flex:1;max-width:460px;font-size:12.5px;padding:7px 10px;background:transparent;border-style:dashed}
 .bg-add .inp:focus{background:var(--bg3);border-style:solid}
-.bg-add.sub{padding-left:62px}
 
 /* detalle del ítem: subítems como tabla propia + actualizaciones */
-.bg-det{padding:0 18px 16px 44px;background:rgba(0,0,0,.2);border-bottom:1px solid rgba(255,255,255,.05);
+.bg-det{padding:0 16px 16px 36px;background:rgba(0,0,0,.22);border-bottom:1px solid rgba(255,255,255,.055);
   position:relative}
-.bg-det::before{content:'';position:absolute;left:30px;top:0;bottom:16px;width:2px;background:var(--gc);opacity:.5;
+.bg-det::before{content:'';position:absolute;left:20px;top:0;bottom:16px;width:2px;background:var(--gc);opacity:.5;
   border-radius:2px}
 .sub-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;
   margin:12px 0 0}
-.sub-row{display:grid;grid-template-columns:minmax(160px,1fr) 92px 140px 128px 34px;gap:8px;align-items:stretch;
-  border-bottom:1px solid rgba(255,255,255,.06)}
+.sub-row{display:grid;grid-template-columns:minmax(160px,1fr) 92px 148px 132px 36px;align-items:stretch;
+  min-height:40px;border-bottom:1px solid rgba(255,255,255,.06)}
 .sub-row:last-child{border-bottom:none}
-.sub-row>div{display:flex;align-items:center;padding:5px 0;min-width:0}
-.sub-row>div:first-child{padding-left:12px}
-.sub-row>div:last-child{padding-right:10px;justify-content:center}
+.sub-row>div{display:flex;align-items:center;padding:5px 10px;min-width:0;
+  border-left:1px solid rgba(255,255,255,.05)}
+.sub-row>div:first-child{padding-left:12px;border-left:none}
+.sub-row>div:nth-child(2){justify-content:center;padding:5px 4px}
+.sub-row>div:last-child{justify-content:center;padding:5px 2px}
 .sub-head{background:rgba(255,255,255,.05)}
 .sub-head>div{font-size:9.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;
   padding:8px 0;justify-content:center}
@@ -772,13 +827,19 @@ let descOpen = {}, temaOpen = {};
 let resumenOpen = true;                 // franja de KPIs/alertas arriba del tablero
 
 function blank(){ return {cuentas:[], personas:[], inis:[], tareas:[], recurrentes:[], semanas:{},
-  tablero:{estados:JSON.parse(JSON.stringify(ESTADOS_BASE)), grupos:[]}}; }
+  tablero:{estados:JSON.parse(JSON.stringify(ESTADOS_BASE)), grupos:[], autos:[]}}; }
 function blankRaiz(){
   const r = {v:2, activo:'email', espacios:{}, ultimoBackup:''};
   ESPACIOS.forEach(e=>{ r.espacios[e.k] = Object.assign(blank(), {nombre:e.n}); });
   return r;
 }
-const T = () => (S.tablero = S.tablero || {estados:JSON.parse(JSON.stringify(ESTADOS_BASE)), grupos:[]});
+const T = () => {
+  S.tablero = S.tablero || {};
+  S.tablero.estados = S.tablero.estados || JSON.parse(JSON.stringify(ESTADOS_BASE));
+  S.tablero.grupos = S.tablero.grupos || [];
+  S.tablero.autos = S.tablero.autos || [];
+  return S.tablero;
+};
 
 // Rellena lo que falte para que datos viejos (o de otra versión) no rompan nada
 function normalizarEspacio(raw){
@@ -791,6 +852,7 @@ function normalizarEspacio(raw){
   raw.tablero.estados = (raw.tablero.estados && raw.tablero.estados.length)
     ? raw.tablero.estados : JSON.parse(JSON.stringify(ESTADOS_BASE));
   raw.tablero.grupos = raw.tablero.grupos || [];
+  raw.tablero.autos = raw.tablero.autos || [];
   raw.tablero.grupos.forEach(g=>{
     g.items = g.items || [];
     g.items.forEach(it=>{ it.subitems = it.subitems || []; it.comentarios = it.comentarios || []; });
@@ -1196,14 +1258,17 @@ function render(){
   document.getElementById('ajeno').innerHTML = esDueno() ? '' :
     '<span class="ajeno">Tablero de otra persona'+(ROL==='lector'?' · solo lectura':'')+
     '<button onclick="volverAlMio()">Ir al mío</button></span>';
-  // un solo botón: el espacio donde estás. El otro vive detrás de "Cambiar".
-  const otros = ESPACIOS.filter(e=>e.k !== RAIZ.activo);
+  // desplegable propio: se ve dónde estás, y el otro equipo está a un click
   document.getElementById('esp-sw').innerHTML =
-    '<span class="esp-actual" style="--ec:'+colorEspacio()+'">'+
-      '<i></i>'+esc(S.nombre || RAIZ.activo)+
-    '</span>'+
-    otros.map(e=>'<button class="esp-otro" onclick="pedirCambioEspacio(\''+e.k+'\')" '+
-      'title="Ir a '+esc(RAIZ.espacios[e.k].nombre)+'">Cambiar</button>').join('');
+    '<button class="cel-btn esp-actual" style="--ec:'+colorEspacio()+'" onclick="abrirMenu(\'esp\')">'+
+      '<i></i>'+esc(S.nombre || RAIZ.activo)+'<b>&#9662;</b>'+
+    '</button>'+
+    (menuEs('esp','','','') ? '<div class="menu menu-esp">'+
+      ESPACIOS.map(e=>'<button class="menu-esp-i'+(e.k===RAIZ.activo?' act':'')+'" '+
+        'onclick="menu=null;cambiarEspacio(\''+e.k+'\')"><i style="background:'+e.c+'"></i>'+
+        esc(RAIZ.espacios[e.k].nombre || e.n)+
+        (e.k===RAIZ.activo?'<span>acá estás</span>':'')+'</button>').join('')+
+      '</div>' : '');
   document.documentElement.style.setProperty('--esp-color', colorEspacio());
   const lbl = document.getElementById('wklabel');
   const dif = semanasDeDiferencia(cur);
@@ -1385,7 +1450,8 @@ function kpi(label,val,sub,cls){
    fecha y comentarios. Todo vive en S.tablero, fuera del snapshot
    semanal: el tablero es continuo, las semanas son fotos.
    ============================================================ */
-let itemOpen = {}, estadosOpen = false;
+let itemOpen = {}, estadosOpen = false, autosOpen = false;
+const autosActivas = () => (T().autos||[]).filter(a=>a.activa).length;
 const findG = gid => T().grupos.find(g=>g.id===gid);
 const findI = (gid,iid) => { const g = findG(gid); return g && g.items.find(i=>i.id===iid); };
 const estadoDe = id => T().estados.find(e=>e.id===id) || null;
@@ -1437,7 +1503,55 @@ function addItem(gid, texto){
   const nuevo = document.getElementById('ni-'+gid); if(nuevo) nuevo.focus();
 }
 function setItem(gid,iid,campo,v){ const it = findI(gid,iid); if(it){ it[campo] = v; save(); } }
-function setItemAhora(gid,iid,campo,v){ const it = findI(gid,iid); if(it){ it[campo] = v; saveNow(); render(); } }
+function setItemAhora(gid,iid,campo,v){
+  const it = findI(gid,iid); if(!it) return;
+  it[campo] = v;
+  if(campo === 'estado') aplicarAutos(gid, iid);   // puede mudarlo de grupo
+  saveNow(); render();
+}
+
+/* --- automatizaciones ---
+   Una sola forma, a propósito: "cuando el estado pase a X, mover al grupo Y".
+   Es la que Tomás pidió y la que se entiende sin leer un manual. */
+function aplicarAutos(gid, iid){
+  const t = T();
+  const g = findG(gid), it = findI(gid, iid);
+  if(!g || !it) return;
+  const regla = (t.autos||[]).find(a=>a.activa && a.estadoId === it.estado && a.grupoId && a.grupoId !== gid);
+  if(!regla) return;
+  const destino = findG(regla.grupoId);
+  if(!destino) return;
+  g.items = g.items.filter(x=>x.id !== iid);
+  destino.items.push(it);
+  delete itemOpen[gid+'/'+iid];
+  const e = estadoDe(it.estado);
+  toast('"'+(it.texto.length>26?it.texto.slice(0,24)+'…':it.texto)+'" pasó a '+(e?e.n:'ese estado')+' → '+destino.nombre);
+}
+function addAuto(){
+  const t = T();
+  if(!t.grupos.length){ toast('Primero creá al menos un grupo'); return; }
+  t.autos.push({id:uid(), activa:true, estadoId:t.estados[t.estados.length-1].id, grupoId:t.grupos[t.grupos.length-1].id});
+  saveNow(); render();
+}
+function setAuto(aid, campo, v){
+  const a = T().autos.find(x=>x.id===aid);
+  if(a){ a[campo] = (campo === 'activa') ? !!v : v; saveNow(); render(); }
+}
+function delAuto(aid){ T().autos = T().autos.filter(a=>a.id!==aid); saveNow(); render(); }
+// crea el grupo destino y la regla de una, que es el caso típico
+function autoRapida(){
+  const t = T();
+  let destino = t.grupos.find(g=>/realizad|hecho|listo|terminad/i.test(g.nombre));
+  if(!destino){
+    destino = {id:uid(), nombre:'Trabajos realizados', color:'#22c55e', plegado:true, items:[]};
+    t.grupos.push(destino);
+  }
+  const listo = t.estados.find(e=>/listo|hecho|termin|realizad/i.test(e.n)) || t.estados[t.estados.length-1];
+  if(t.autos.some(a=>a.estadoId===listo.id && a.grupoId===destino.id)){ toast('Esa automatización ya existe'); return; }
+  t.autos.push({id:uid(), activa:true, estadoId:listo.id, grupoId:destino.id});
+  saveNow(); render();
+  toast('Listo: lo que pase a "'+listo.n+'" se va a "'+destino.nombre+'"');
+}
 function delItemTab(gid,iid){
   const g = findG(gid), it = findI(gid,iid); if(!g || !it) return;
   if(!confirm('¿Borrar "'+it.texto+'"?')) return;
@@ -1508,14 +1622,49 @@ function alUnoAUno(txt, nota){
   toast('"'+(txt.length>32?txt.slice(0,30)+'…':txt)+'" va al tablero, en '+g.nombre);
 }
 
+/* --- menús propios ---
+   El <select> nativo arruinaba el look: tipografía del sistema, flechita gris
+   y un desplegable que no se puede pintar. Estos son menús propios, con los
+   colores de cada etiqueta a la vista. */
+let menu = null;   // {tipo:'est'|'per'|'esp', gid, iid, sid}
+function abrirMenu(tipo, gid, iid, sid){
+  const igual = menu && menu.tipo===tipo && menu.gid===gid && menu.iid===iid && menu.sid===sid;
+  menu = igual ? null : {tipo:tipo, gid:gid||'', iid:iid||'', sid:sid||''};
+  render();
+}
+function cerrarMenu(){ if(menu){ menu = null; render(); } }
+document.addEventListener('mousedown', function(e){
+  if(!menu) return;
+  if(e.target.closest && (e.target.closest('.menu') || e.target.closest('.cel-btn'))) return;
+  cerrarMenu();
+});
+function elegirEstado(gid, iid, sid, eid){
+  menu = null;
+  if(sid) setSubAhora(gid, iid, sid, 'estado', eid);
+  else setItemAhora(gid, iid, 'estado', eid);
+}
+function elegirPersona(gid, iid, sid, pid){
+  menu = null;
+  if(sid) setSubAhora(gid, iid, sid, 'resp', pid);
+  else setItemAhora(gid, iid, 'resp', pid);
+}
+const menuEs = (tipo,gid,iid,sid) => !!(menu && menu.tipo===tipo && menu.gid===gid && menu.iid===iid && menu.sid===(sid||''));
+
 /* --- dibujo --- */
-function celdaEstado(estId, onchange){
+function celdaEstado(estId, gid, iid, sid){
   const e = estadoDe(estId);
-  const col = e ? e.c : 'rgba(255,255,255,.06)';
-  return '<select class="est-sel" style="background:'+col+';color:'+(e?'#fff':'var(--text3)')+'" onchange="'+onchange+'">'+
-    (e ? '' : '<option value="" selected>— sin estado —</option>')+
-    T().estados.map(x=>'<option value="'+x.id+'"'+(x.id===estId?' selected':'')+'>'+esc(x.n)+'</option>').join('')+
-    '</select>';
+  const col = e ? e.c : 'transparent';
+  const args = jsArg(gid)+','+jsArg(iid)+','+jsArg(sid||'');
+  let h = '<button class="cel-btn est-btn'+(e?'':' vacio')+'" style="background:'+col+'" '+
+    'onclick="abrirMenu(\'est\','+args+')">'+(e ? esc(e.n) : '—')+'</button>';
+  if(menuEs('est', gid, iid, sid)){
+    h += '<div class="menu menu-est">'+
+      T().estados.map(x=>'<button class="menu-est-i" style="background:'+x.c+'" '+
+        'onclick="elegirEstado('+args+','+jsArg(x.id)+')">'+esc(x.n)+'</button>').join('')+
+      '<button class="menu-est-i vacio" onclick="elegirEstado('+args+',\'\')">Sin estado</button>'+
+    '</div>';
+  }
+  return h;
 }
 // color estable a partir del nombre, para que cada persona tenga siempre el suyo
 function colorDeNombre(n){
@@ -1525,26 +1674,64 @@ function colorDeNombre(n){
 }
 /* Como en Monday: se ve un avatar con las iniciales, y el select va encima,
    transparente, para que el click abra la lista de siempre. */
-function celdaPersona(pid, onchange){
+function celdaPersona(pid, gid, iid, sid){
   const act = activos(S.personas);
   const nom = nombrePersona(pid);
-  return '<span class="per-cell">'+
-    (nom ? '<span class="avatar" style="background:'+colorDeNombre(nom)+'" title="'+esc(nom)+'">'+esc(inicialesDe(nom))+'</span>'
-         : '<span class="avatar vacio" title="Sin asignar">+</span>')+
-    '<select class="per-ovl" onchange="'+onchange+'">'+
-      '<option value="">— sin asignar —</option>'+
-      act.map(p=>'<option value="'+p.id+'"'+(p.id===pid?' selected':'')+'>'+esc(p.nombre)+'</option>').join('')+
-      (pid && !act.some(p=>p.id===pid) ? '<option value="'+pid+'" selected>(persona archivada)</option>' : '')+
-    '</select></span>';
+  const args = jsArg(gid)+','+jsArg(iid)+','+jsArg(sid||'');
+  let h = '<button class="cel-btn per-btn" onclick="abrirMenu(\'per\','+args+')" title="'+(nom?esc(nom):'Sin asignar')+'">'+
+    (nom ? '<span class="avatar" style="background:'+colorDeNombre(nom)+'">'+esc(inicialesDe(nom))+'</span>'
+         : '<span class="avatar vacio">+</span>')+'</button>';
+  if(menuEs('per', gid, iid, sid)){
+    h += '<div class="menu menu-per">'+
+      (act.length ? act.map(p=>'<button class="menu-per-i'+(p.id===pid?' act':'')+'" '+
+        'onclick="elegirPersona('+args+','+jsArg(p.id)+')">'+
+        '<span class="avatar" style="background:'+colorDeNombre(p.nombre)+'">'+esc(inicialesDe(p.nombre))+'</span>'+
+        '<span class="menu-per-n">'+esc(p.nombre)+'</span></button>').join('')
+        : '<div class="menu-vacio">Cargá el equipo en Personas</div>')+
+      '<button class="menu-per-i" onclick="elegirPersona('+args+',\'\')">'+
+        '<span class="avatar vacio">–</span><span class="menu-per-n">Sin asignar</span></button>'+
+    '</div>';
+  }
+  return h;
 }
 function vTablero(){
   const t = T();
   let h = '<div class="section"><div class="section-hdr">'+
     '<div class="section-title"><span class="dot"></span>Tablero de seguimiento</div>'+
-    '<div style="display:flex;gap:6px">'+
-      '<button class="btn-sm" onclick="estadosOpen=!estadosOpen;render()">'+(estadosOpen?'Cerrar estados':'Estados')+'</button>'+
+    '<div style="display:flex;gap:6px;align-items:center">'+
+      (autosActivas() ? '<span class="auto-pill" title="Automatizaciones activas">&#9889; '+autosActivas()+'</span>' : '')+
+      '<button class="btn-sm" onclick="autosOpen=!autosOpen;estadosOpen=false;render()">'+(autosOpen?'Cerrar':'Automatizaciones')+'</button>'+
+      '<button class="btn-sm" onclick="estadosOpen=!estadosOpen;autosOpen=false;render()">'+(estadosOpen?'Cerrar':'Etiquetas')+'</button>'+
       '<button class="btn-orange" onclick="addGrupo()">+ Grupo</button>'+
     '</div></div>';
+
+  if(autosOpen){
+    const t = T();
+    h += '<div class="section-body" style="border-bottom:1px solid var(--border)">'+
+      '<div class="hint" style="margin-bottom:10px">Cuando un ítem pasa a cierto estado, se muda solo al grupo que elijas. '+
+      'Se aplica al momento de cambiar el estado, no retroactivamente.</div>';
+    h += (t.autos||[]).length ? t.autos.map(a=>{
+      const e = estadoDe(a.estadoId), g = findG(a.grupoId);
+      return '<div class="auto-row'+(a.activa?'':' off')+'">'+
+        '<button class="sw-btn'+(a.activa?' on':'')+'" onclick="setAuto('+jsArg(a.id)+',\'activa\','+(!a.activa)+')" '+
+          'title="'+(a.activa?'Activa — click para pausar':'Pausada — click para activar')+'"><i></i></button>'+
+        '<span class="auto-tx">Cuando el estado pase a</span>'+
+        '<select class="inp auto-sel" onchange="setAuto('+jsArg(a.id)+',\'estadoId\',this.value)">'+
+          t.estados.map(x=>'<option value="'+x.id+'"'+(x.id===a.estadoId?' selected':'')+'>'+esc(x.n)+'</option>').join('')+
+        '</select>'+
+        '<span class="auto-tx">mover a</span>'+
+        '<select class="inp auto-sel" onchange="setAuto('+jsArg(a.id)+',\'grupoId\',this.value)">'+
+          t.grupos.map(x=>'<option value="'+x.id+'"'+(x.id===a.grupoId?' selected':'')+'>'+esc(x.nombre)+'</option>').join('')+
+        '</select>'+
+        (e&&g ? '' : '<span class="hint" style="color:#ef6b6b">incompleta</span>')+
+        '<button class="mini" onclick="delAuto('+jsArg(a.id)+')" title="Borrar">&times;</button>'+
+      '</div>';
+    }).join('') : '<div class="hint">Todavía no hay ninguna.</div>';
+    h += '<div style="margin-top:12px;display:flex;gap:7px;flex-wrap:wrap">'+
+      '<button class="btn-sm" onclick="addAuto()">+ Automatización</button>'+
+      '<button class="btn-orange" onclick="autoRapida()">Crear la de "Trabajos realizados"</button></div>'+
+    '</div>';
+  }
 
   if(estadosOpen){
     h += '<div class="section-body" style="border-bottom:1px solid var(--border)">'+
@@ -1596,8 +1783,8 @@ function vTablero(){
             '<input class="bg-item" value="'+esc(it.texto)+'" oninput="setItem(\''+g.id+'\',\''+it.id+'\',\'texto\',this.value)">'+
             (nSub?'<span class="bg-mini" title="'+nSub+' subítem'+(nSub===1?'':'s')+'">'+nSub+'</span>':'')+
           '</div>'+
-          '<div>'+celdaPersona(it.resp, 'setItemAhora(\''+g.id+'\',\''+it.id+'\',\'resp\',this.value)')+'</div>'+
-          '<div>'+celdaEstado(it.estado, 'setItemAhora(\''+g.id+'\',\''+it.id+'\',\'estado\',this.value)')+'</div>'+
+          '<div class="cel">'+celdaPersona(it.resp, g.id, it.id, '')+'</div>'+
+          '<div class="cel celda-est">'+celdaEstado(it.estado, g.id, it.id, '')+'</div>'+
           '<div><input class="fch-inp" type="date" value="'+esc(it.fecha||'')+'" '+
             'onchange="setItemAhora(\''+g.id+'\',\''+it.id+'\',\'fecha\',this.value)"></div>'+
           '<div><button class="bg-com'+(nCom?' hay':'')+'" onclick="toggleItem(\''+g.id+'\',\''+it.id+'\')">'+
@@ -1630,8 +1817,8 @@ function detalleItem(g, it){
     h += '<div class="sub-row">'+
       '<div><input class="bg-item" value="'+esc(s.texto)+'" placeholder="Subítem" '+
         'oninput="setSub(\''+g.id+'\',\''+it.id+'\',\''+s.id+'\',\'texto\',this.value)"></div>'+
-      '<div>'+celdaPersona(s.resp, 'setSubAhora(\''+g.id+'\',\''+it.id+'\',\''+s.id+'\',\'resp\',this.value)')+'</div>'+
-      '<div class="celda-est">'+celdaEstado(s.estado, 'setSubAhora(\''+g.id+'\',\''+it.id+'\',\''+s.id+'\',\'estado\',this.value)')+'</div>'+
+      '<div class="cel">'+celdaPersona(s.resp, g.id, it.id, s.id)+'</div>'+
+      '<div class="cel celda-est">'+celdaEstado(s.estado, g.id, it.id, s.id)+'</div>'+
       '<div><input class="fch-inp" type="date" value="'+esc(s.fecha||'')+'" '+
         'onchange="setSubAhora(\''+g.id+'\',\''+it.id+'\',\''+s.id+'\',\'fecha\',this.value)"></div>'+
       '<div><button class="ico" onclick="delSub(\''+g.id+'\',\''+it.id+'\',\''+s.id+'\')" title="Borrar">&times;</button></div>'+
