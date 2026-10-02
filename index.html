@@ -86,6 +86,13 @@ body::before{content:'';position:fixed;top:0;left:0;right:0;height:3px;backgroun
 @keyframes lat{0%,100%{opacity:.35}50%{opacity:1}}
 .user-pill{font-size:11px;color:var(--text3);background:var(--bg2);border:1px solid var(--border);padding:5px 11px;border-radius:20px;white-space:nowrap}
 .ac-mail{flex:1;min-width:180px;font-size:13px;font-family:var(--code);color:var(--text)}
+.pasos{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.paso{display:flex;gap:10px;align-items:flex-start;font-size:12.5px;color:var(--text2);line-height:1.5}
+.paso b{color:var(--text)}
+.paso a{color:var(--orange)}
+.paso-n{flex:none;width:20px;height:20px;border-radius:50%;background:rgba(240,78,35,.18);
+  border:1px solid rgba(240,78,35,.4);color:#ffa584;font-size:10.5px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;margin-top:1px}
 .ajeno{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:600;padding:4px 6px 4px 12px;
   border-radius:20px;background:rgba(122,158,202,.16);border:1px solid rgba(122,158,202,.4);color:#a8c6e8;white-space:nowrap}
 .ajeno button{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;border:none;cursor:pointer;
@@ -2382,16 +2389,31 @@ function fallbackCopy(txt,msg){
 /* ============================================================
    VISTA — Accesos
    ============================================================ */
+/* Acepta varios mails de una: separados por coma, punto y coma, espacio o
+   salto de línea. Así se puede pegar una lista entera del mail o del Slack. */
 function darAcceso(){
-  const mail = (document.getElementById('ac-mail').value || '').trim().toLowerCase();
+  const crudo = document.getElementById('ac-mail').value || '';
   const rol = document.getElementById('ac-rol').value;
-  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail)){ toast('Ese mail no parece válido'); return; }
-  if(mail === (MAIL||'').toLowerCase()){ toast('Ese sos vos, ya tenés acceso'); return; }
-  sb.from('seg_accesos').upsert({dueno:UID, email:mail, rol:rol}, {onConflict:'dueno,email'})
+  const vale = m => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(m);
+  const buenos = [], malos = [];
+  crudo.split(/[\s,;]+/).map(m=>m.trim().toLowerCase()).filter(Boolean).forEach(m=>{
+    if(!vale(m)) malos.push(m);
+    else if(m === (MAIL||'').toLowerCase()) malos.push(m+' (sos vos)');
+    else if(!buenos.includes(m)) buenos.push(m);
+  });
+  if(!buenos.length){
+    toast(malos.length ? 'No pude leer ningún mail válido en eso' : 'Escribí al menos un mail');
+    return;
+  }
+  sb.from('seg_accesos')
+    .upsert(buenos.map(m=>({dueno:UID, email:m, rol:rol})), {onConflict:'dueno,email'})
     .then(function(r){
       if(r.error){ toast('No se pudo: '+r.error.message); return; }
       document.getElementById('ac-mail').value = '';
-      cargarAccesos(); render(); toast('Listo, '+mail+' ya puede entrar');
+      cargarAccesos(); render();
+      toast(buenos.length === 1
+        ? 'Listo, '+buenos[0]+' ya puede entrar'
+        : buenos.length+' personas con acceso'+(malos.length ? ' · '+malos.length+' no se entendieron' : ''));
     });
 }
 function cambiarRol(mail, rol){
@@ -2418,8 +2440,22 @@ function vAccesos(){
     '<div class="section-title"><span class="dot"></span>Quién puede entrar a tu tablero</div>'+
     '<span class="hint">'+ACCESOS.length+' persona'+(ACCESOS.length===1?'':'s')+'</span></div>'+
     '<div class="section-body">'+
-    '<div class="hint" style="margin-bottom:12px">Cargá el mail de la persona y, cuando entre con su cuenta '+
-    '(la misma de slots y el semáforo), va a ver <b>este</b> tablero en vez del suyo.<br>'+
+    '<div class="pasos">'+
+      '<div class="paso"><span class="paso-n">1</span><div>'+
+        '<b>Dale el permiso acá</b> — cargá los mails abajo. Podés pegar varios separados por coma.'+
+      '</div></div>'+
+      '<div class="paso"><span class="paso-n">2</span><div>'+
+        '<b>La persona necesita cuenta en el Supabase de We Are.</b> Si nunca entró a slots ni al semáforo, '+
+        'no la tiene, y el registro abierto está apagado: hay que invitarla desde '+
+        '<a href="https://supabase.com/dashboard/project/ojzcxwhoinmljospgmfp/auth/users" target="_blank" rel="noopener">'+
+        'Authentication → Users → Invite</a>. Le llega un mail y se pone su propia contraseña.'+
+      '</div></div>'+
+      '<div class="paso"><span class="paso-n">&#10003;</span><div>'+
+        'El orden no importa: si le das el permiso antes de que exista la cuenta, queda esperando y '+
+        'funciona apenas entre. El permiso se resuelve por mail.'+
+      '</div></div>'+
+    '</div>'+
+    '<div class="hint" style="margin-bottom:12px">'+
     '<b style="color:var(--amber)">El acceso es a todo el documento</b>: quien entra ve los dos espacios, '+
     ESPACIOS.map(e=>esc(RAIZ.espacios[e.k].nombre || e.n)).join(' y ')+'. No se puede compartir uno solo.</div>';
 
@@ -2435,14 +2471,14 @@ function vAccesos(){
     '</div>').join('')
     : '<div class="hint">Todavía no compartiste el tablero con nadie.</div>';
 
-  h += '<div class="cfg-add">'+
-    '<input class="inp" id="ac-mail" type="email" placeholder="mail@we-are.com.ar" '+
-      'onkeydown="if(event.key===\'Enter\')darAcceso()">'+
+  h += '<div class="cfg-add" style="align-items:flex-start">'+
+    '<textarea class="inp" id="ac-mail" style="min-height:44px;resize:vertical" '+
+      'placeholder="uno@we-are.com.ar, otro@we-are.com.ar — o uno por línea"></textarea>'+
     '<select class="inp" id="ac-rol" style="flex:0 0 160px">'+
-      '<option value="editor">Puede editar</option><option value="lector">Solo lectura</option></select>'+
-    '<button class="btn-orange" onclick="darAcceso()">Dar acceso</button></div>';
-  h += '<div class="hint" style="margin-top:12px">La persona tiene que tener cuenta en el Supabase de We Are. '+
-    'Si nunca entró a slots ni al semáforo, primero hay que crearle el usuario ahí.</div>';
+      '<option value="editor">Pueden editar</option><option value="lector">Solo lectura</option></select>'+
+    '<button class="btn-orange" onclick="darAcceso()">Dar acceso</button></div>'+
+    '<div class="hint" style="margin-top:7px">El rol que elijas se aplica a todos los que cargues en esta tanda. '+
+    'Después podés cambiarlo uno por uno en la lista.</div>';
   h += '</div></div>';
 
   if(COMPARTIDOS.length){
