@@ -509,7 +509,16 @@ td.cell{text-align:center;padding:6px 8px}
 .bg-head>div:nth-child(2),.bg-head>div:nth-child(3),.bg-head>div:nth-child(4),
 .bg-head>div:nth-child(5){justify-content:center}
 .bg-head:hover{background:rgba(0,0,0,.18);border-left-color:transparent}
-.bg-tx{display:flex;align-items:center;gap:6px;min-width:0}
+.bg-tx{display:flex;align-items:center;gap:5px;min-width:0}
+/* manija de arrastre: aparece al pasar el mouse, como en Monday */
+.manija{color:var(--text3);font-size:12px;letter-spacing:-3px;cursor:grab;padding:0 3px 0 0;flex:none;
+  opacity:0;transition:opacity .12s;user-select:none}
+.bg-row:hover .manija{opacity:1}
+.manija:active{cursor:grabbing}
+.bg-row.arrastrando{opacity:.35}
+.bg-row.drop-arriba{box-shadow:inset 0 3px 0 var(--orange)}
+.bg-row.drop-abajo{box-shadow:inset 0 -3px 0 var(--orange)}
+.bg-grupo.grupo-target{outline:2px dashed var(--gc);outline-offset:2px}
 .bg-item{flex:1;min-width:0;background:transparent;border:1px solid transparent;border-radius:6px;color:var(--text);
   font-size:13px;font-weight:500;padding:5px 7px;outline:none;text-overflow:ellipsis}
 .bg-row:hover .bg-item{border-color:var(--border2)}
@@ -1559,6 +1568,79 @@ function delItemTab(gid,iid){
 }
 function toggleItem(gid,iid){ const k = gid+'/'+iid; itemOpen[k] = !itemOpen[k]; render(); }
 
+/* --- arrastrar ítems ---
+   El arrastre arranca solo desde la manija: si el row entero fuera arrastrable,
+   seleccionar texto en el título se volvería un drag. */
+let arrastre = null;
+function limpiarMarcas(){
+  document.querySelectorAll('.drop-arriba,.drop-abajo,.grupo-target')
+    .forEach(e=>e.classList.remove('drop-arriba','drop-abajo','grupo-target'));
+}
+function dragStart(ev, gid, iid){
+  arrastre = {gid:gid, iid:iid};
+  const fila = ev.currentTarget.closest('.bg-row');
+  ev.dataTransfer.effectAllowed = 'move';
+  try{
+    ev.dataTransfer.setData('text/plain', iid);
+    if(fila) ev.dataTransfer.setDragImage(fila, 24, 18);
+  }catch(e){}
+  if(fila) setTimeout(()=>fila.classList.add('arrastrando'), 0);
+}
+function dragEnd(){
+  arrastre = null; limpiarMarcas();
+  document.querySelectorAll('.arrastrando').forEach(e=>e.classList.remove('arrastrando'));
+}
+const mitadDeAbajo = (ev, el) => {
+  const r = el.getBoundingClientRect();
+  return (ev.clientY - r.top) > r.height / 2;
+};
+function dragSobreFila(ev, gid, iid){
+  if(!arrastre || (arrastre.gid === gid && arrastre.iid === iid)) return;
+  ev.preventDefault(); ev.stopPropagation();
+  ev.dataTransfer.dropEffect = 'move';
+  limpiarMarcas();
+  ev.currentTarget.classList.add(mitadDeAbajo(ev, ev.currentTarget) ? 'drop-abajo' : 'drop-arriba');
+}
+function dropEnFila(ev, gid, iid){
+  if(!arrastre) return;
+  ev.preventDefault(); ev.stopPropagation();
+  const despues = mitadDeAbajo(ev, ev.currentTarget);
+  moverItem(arrastre, gid, iid, despues);
+}
+function dragSobreGrupo(ev, gid){
+  if(!arrastre) return;
+  ev.preventDefault();
+  ev.dataTransfer.dropEffect = 'move';
+  limpiarMarcas();
+  ev.currentTarget.classList.add('grupo-target');
+}
+function dropEnGrupo(ev, gid){
+  if(!arrastre) return;
+  ev.preventDefault();
+  moverItem(arrastre, gid, null, true);
+}
+function moverItem(origen, gidDestino, iidRef, despues){
+  limpiarMarcas();
+  if(iidRef && iidRef === origen.iid){ arrastre = null; return; }   // soltarlo sobre sí mismo no hace nada
+  const gO = findG(origen.gid), gD = findG(gidDestino);
+  if(!gO || !gD){ arrastre = null; return; }
+  const i = gO.items.findIndex(x=>x.id === origen.iid);
+  if(i < 0){ arrastre = null; return; }
+  const [it] = gO.items.splice(i, 1);
+  let pos = gD.items.length;
+  if(iidRef){
+    const r = gD.items.findIndex(x=>x.id === iidRef);
+    if(r >= 0) pos = r + (despues ? 1 : 0);
+  }
+  gD.items.splice(pos, 0, it);
+  if(origen.gid !== gidDestino){
+    delete itemOpen[origen.gid+'/'+origen.iid];
+    toast('"'+(it.texto.length>26?it.texto.slice(0,24)+'…':it.texto)+'" → '+gD.nombre);
+  }
+  arrastre = null;
+  saveNow(); render();
+}
+
 /* --- subítems --- */
 function addSub(gid,iid){
   const it = findI(gid,iid); if(!it) return;
@@ -1756,7 +1838,9 @@ function vTablero(){
 
   t.grupos.forEach(g=>{
     const hechos = g.items.filter(i=>{ const e = estadoDe(i.estado); return e && /listo|hecho|termin/i.test(e.n); }).length;
-    h += '<div class="bg-grupo" style="--gc:'+esc(g.color)+'">'+
+    h += '<div class="bg-grupo" style="--gc:'+esc(g.color)+'" '+
+        'ondragover="dragSobreGrupo(event,\''+g.id+'\')" ondrop="dropEnGrupo(event,\''+g.id+'\')" '+
+        'ondragleave="this.classList.remove(\'grupo-target\')">'+
       '<div class="bg-hdr">'+
         '<button class="bg-caret" onclick="plegarGrupo(\''+g.id+'\')" title="'+(g.plegado?'Desplegar':'Plegar')+'">'+(g.plegado?'&#9656;':'&#9662;')+'</button>'+
         '<input class="bg-nom" value="'+esc(g.nombre)+'" oninput="setGrupo(\''+g.id+'\',\'nombre\',this.value)">'+
@@ -1776,8 +1860,11 @@ function vTablero(){
       g.items.forEach(it=>{
         const abierto = !!itemOpen[g.id+'/'+it.id];
         const nSub = it.subitems.length, nCom = it.comentarios.length;
-        h += '<div class="bg-row">'+
+        h += '<div class="bg-row" ondragover="dragSobreFila(event,\''+g.id+'\',\''+it.id+'\')" '+
+            'ondrop="dropEnFila(event,\''+g.id+'\',\''+it.id+'\')" ondragleave="this.classList.remove(\'drop-arriba\',\'drop-abajo\')">'+
           '<div class="bg-tx">'+
+            '<span class="manija" draggable="true" title="Arrastrar para mover de grupo" '+
+              'ondragstart="dragStart(event,\''+g.id+'\',\''+it.id+'\')" ondragend="dragEnd()">&#8942;&#8942;</span>'+
             '<button class="bg-caret chico" onclick="toggleItem(\''+g.id+'\',\''+it.id+'\')" '+
               'title="Subítems y comentarios">'+(abierto?'&#9662;':'&#9656;')+'</button>'+
             '<input class="bg-item" value="'+esc(it.texto)+'" oninput="setItem(\''+g.id+'\',\''+it.id+'\',\'texto\',this.value)">'+
@@ -2334,7 +2421,7 @@ function vAccesos(){
     '<div class="hint" style="margin-bottom:12px">Cargá el mail de la persona y, cuando entre con su cuenta '+
     '(la misma de slots y el semáforo), va a ver <b>este</b> tablero en vez del suyo.<br>'+
     '<b style="color:var(--amber)">El acceso es a todo el documento</b>: quien entra ve los dos espacios, '+
-    'Email Marketing y Paid Media. No se puede compartir uno solo.</div>';
+    ESPACIOS.map(e=>esc(RAIZ.espacios[e.k].nombre || e.n)).join(' y ')+'. No se puede compartir uno solo.</div>';
 
   h += ACCESOS.length ? ACCESOS.map(a=>
     '<div class="cfg-row">'+
