@@ -564,16 +564,23 @@ td.cell{text-align:center;padding:6px 8px}
   border-radius:2px}
 .sub-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;
   margin:12px 0 0}
-.sub-row{display:grid;grid-template-columns:minmax(160px,1fr) 92px 148px 132px 36px;align-items:stretch;
+.sub-row{display:grid;grid-template-columns:minmax(160px,1fr) 92px 148px 132px 46px 36px;align-items:stretch;
   min-height:40px;border-bottom:1px solid rgba(255,255,255,.06)}
 .sub-row:last-child{border-bottom:none}
 .sub-row>div{display:flex;align-items:center;padding:5px 10px;min-width:0;
   border-left:1px solid rgba(255,255,255,.05)}
 .sub-row>div:first-child{padding-left:12px;border-left:none}
 .sub-row>div:nth-child(2){justify-content:center;padding:5px 4px}
-.sub-row>div:last-child{justify-content:center;padding:5px 2px}
+.sub-row>div:nth-child(5),.sub-row>div:last-child{justify-content:center;padding:5px 2px}
+/* panel de comentarios de un subítem, colgado de su fila */
+.sub-coms{padding:11px 14px 13px 24px;background:rgba(0,0,0,.26);
+  border-bottom:1px solid rgba(255,255,255,.06);box-shadow:inset 3px 0 0 rgba(255,255,255,.1)}
+.sub-coms .upd-nuevo .inp{max-width:none}
+.bg-com.on{color:var(--orange);border-color:var(--border2);background:rgba(240,78,35,.12)}
+/* menciones */
+.mencion{color:#ffa584;background:rgba(240,78,35,.14);border-radius:4px;padding:0 4px;font-weight:600}
 .sub-head{background:rgba(255,255,255,.05)}
-.sub-head>div{font-size:9.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;
+.sub-head>div{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;
   padding:8px 0;justify-content:center}
 .sub-head>div:first-child{justify-content:flex-start;padding-left:12px}
 .sub-row:not(.sub-head):hover{background:rgba(255,255,255,.03)}
@@ -897,7 +904,10 @@ function normalizarEspacio(raw){
   raw.tablero.autos = raw.tablero.autos || [];
   raw.tablero.grupos.forEach(g=>{
     g.items = g.items || [];
-    g.items.forEach(it=>{ it.subitems = it.subitems || []; it.comentarios = it.comentarios || []; });
+    g.items.forEach(it=>{
+      it.subitems = it.subitems || []; it.comentarios = it.comentarios || [];
+      it.subitems.forEach(s=> s.comentarios = s.comentarios || []);
+    });
   });
   // los temas viejos no tenían id: se los asignamos para poder abrirles las notas
   Object.keys(raw.semanas).forEach(k=>{
@@ -1488,7 +1498,7 @@ function kpi(label,val,sub,cls){
    fecha y comentarios. Todo vive en S.tablero, fuera del snapshot
    semanal: el tablero es continuo, las semanas son fotos.
    ============================================================ */
-let itemOpen = {}, estadosOpen = false, autosOpen = false;
+let itemOpen = {}, estadosOpen = false, autosOpen = false, subComsOpen = {};
 const autosActivas = () => (T().autos||[]).filter(a=>a.activa).length;
 const findG = gid => T().grupos.find(g=>g.id===gid);
 const findI = (gid,iid) => { const g = findG(gid); return g && g.items.find(i=>i.id===iid); };
@@ -1675,9 +1685,28 @@ function addSub(gid,iid){
   const it = findI(gid,iid); if(!it) return;
   const el = document.getElementById('ns-'+iid);
   const txt = (el ? el.value : '').trim(); if(!txt) return;
-  it.subitems.push({id:uid(), texto:txt, estado:T().estados[0].id, resp:'', fecha:''});
+  it.subitems.push({id:uid(), texto:txt, estado:T().estados[0].id, resp:'', fecha:'', comentarios:[]});
   saveNow(); render();
   const nuevo = document.getElementById('ns-'+iid); if(nuevo) nuevo.focus();
+}
+const findS = (gid,iid,sid) => { const it = findI(gid,iid); return it && it.subitems.find(s=>s.id===sid); };
+function toggleSubComs(gid,iid,sid){
+  const k = gid+'/'+iid+'/'+sid;
+  subComsOpen[k] = !subComsOpen[k];
+  render();
+}
+function addComentarioSub(gid,iid,sid){
+  const s = findS(gid,iid,sid); if(!s) return;
+  s.comentarios = s.comentarios || [];
+  const el = document.getElementById('ncs-'+sid);
+  const txt = (el ? el.value : '').trim(); if(!txt) return;
+  s.comentarios.push({id:uid(), texto:txt, fecha:isoDate(new Date()), autor:(MAIL||'').split('@')[0]});
+  saveNow(); render();
+  const nuevo = document.getElementById('ncs-'+sid); if(nuevo) nuevo.focus();
+}
+function delComentarioSub(gid,iid,sid,cid){
+  const s = findS(gid,iid,sid); if(!s) return;
+  s.comentarios = (s.comentarios||[]).filter(c=>c.id!==cid); saveNow(); render();
 }
 function setSub(gid,iid,sid,campo,v){
   const it = findI(gid,iid); if(!it) return;
@@ -1790,6 +1819,76 @@ function celdaPersona(pid, gid, iid, sid){
     'onclick="abrirMenu(\'per\','+args+')" title="'+(nom?esc(nom):'Sin asignar')+'">'+
     (nom ? '<span class="avatar" style="background:'+colorDeNombre(nom)+'">'+esc(inicialesDe(nom))+'</span>'
          : '<span class="avatar vacio">+</span>')+'</button>';
+}
+
+/* --- menciones con @ ---
+   No se re-dibuja la app en cada tecla (se perdería el foco del input): el
+   listado se pinta directo en la capa y se cierra solo. */
+let mencion = null;
+function cerrarMencion(){
+  if(!mencion) return;
+  mencion = null;
+  const capa = document.getElementById('capa-menu');
+  if(capa && !menu) capa.innerHTML = '';
+}
+function mencionInput(ev){
+  const el = ev.target;
+  const antes = el.value.slice(0, el.selectionStart);
+  const m = antes.match(/@([\p{L}\p{N}._-]*)$/u);
+  if(!m){ cerrarMencion(); return; }
+  mencion = {id:el.id, desde:el.selectionStart - m[0].length};
+  const q = m[1].toLowerCase();
+  const lista = activos(S.personas).filter(p=>p.nombre.toLowerCase().includes(q)).slice(0,6);
+  if(!lista.length){ cerrarMencion(); return; }
+  const capa = document.getElementById('capa-menu');
+  capa.innerHTML = '<div class="menu menu-per">'+lista.map(p=>
+    '<button class="menu-per-i" onmousedown="event.preventDefault();elegirMencion('+jsArg(p.nombre)+')">'+
+      '<span class="avatar" style="background:'+colorDeNombre(p.nombre)+'">'+esc(inicialesDe(p.nombre))+'</span>'+
+      '<span class="menu-per-n">'+esc(p.nombre)+'</span></button>').join('')+'</div>';
+  const men = capa.firstElementChild, r = el.getBoundingClientRect();
+  let y = r.bottom + 5;
+  if(y + men.offsetHeight > window.innerHeight - 8) y = Math.max(8, r.top - men.offsetHeight - 5);
+  men.style.left = Math.min(r.left, window.innerWidth - men.offsetWidth - 8)+'px';
+  men.style.top = y+'px';
+}
+function elegirMencion(nombre){
+  if(!mencion) return;
+  const el = document.getElementById(mencion.id);
+  if(!el){ cerrarMencion(); return; }
+  const fin = el.selectionStart;
+  el.value = el.value.slice(0, mencion.desde) + '@' + nombre + ' ' + el.value.slice(fin);
+  const pos = mencion.desde + nombre.length + 2;
+  cerrarMencion();
+  el.focus(); el.setSelectionRange(pos, pos);
+}
+// resalta los @Nombre que correspondan a alguien del equipo
+function conMenciones(txt){
+  let h = toHtml(txt);
+  activos(S.personas).forEach(p=>{
+    const n = p.nombre.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+    h = h.replace(new RegExp('@'+n+'\\b', 'gi'), '<span class="mencion">@'+esc(p.nombre)+'</span>');
+  });
+  return h;
+}
+function cajaComentario(id, onEnter, onClick, ph){
+  return '<div class="upd-nuevo">'+
+    '<span class="avatar yo">'+esc(inicialesDe(MAIL||'yo'))+'</span>'+
+    '<input class="inp" id="'+id+'" autocomplete="off" placeholder="'+esc(ph)+'" '+
+      'oninput="mencionInput(event)" onblur="setTimeout(cerrarMencion,120)" '+
+      'onkeydown="if(event.key===\'Enter\'){cerrarMencion();'+onEnter+'}if(event.key===\'Escape\')cerrarMencion()">'+
+    '<button class="btn-sm" onclick="'+onClick+'">Publicar</button></div>';
+}
+function listaComentarios(coms, onBorrar){
+  if(!coms || !coms.length) return '';
+  return '<div class="upds">'+coms.slice().reverse().map(c=>
+    '<div class="upd">'+
+      '<span class="avatar" style="background:'+colorDeNombre(c.autor||'yo')+'">'+esc(inicialesDe(c.autor||'yo'))+'</span>'+
+      '<div class="upd-cuerpo">'+
+        '<div class="upd-h"><b>'+esc(c.autor||'yo')+'</b><span>'+c.fecha+'</span>'+
+        '<button class="ico" onclick="'+onBorrar.replace('%ID%', c.id)+'" title="Borrar">&times;</button></div>'+
+        '<div class="upd-tx">'+conMenciones(c.texto)+'</div>'+
+      '</div>'+
+    '</div>').join('')+'</div>';
 }
 
 /* --- la capa de menús --- */
@@ -1965,9 +2064,12 @@ function detalleItem(g, it){
 
   h += '<div class="sub-card">'+
     '<div class="sub-row sub-head">'+
-      '<div>Subítem</div><div>Responsable</div><div>Estado</div><div>Fecha</div><div></div>'+
+      '<div>Subítem</div><div>Responsable</div><div>Estado</div><div>Fecha</div>'+
+      '<div title="Comentarios">&#128172;</div><div></div>'+
     '</div>';
   it.subitems.forEach(s=>{
+    const nc = (s.comentarios||[]).length;
+    const coms = !!subComsOpen[g.id+'/'+it.id+'/'+s.id];
     h += '<div class="sub-row">'+
       '<div><input class="bg-item" value="'+esc(s.texto)+'" placeholder="Subítem" '+
         'oninput="setSub(\''+g.id+'\',\''+it.id+'\',\''+s.id+'\',\'texto\',this.value)"></div>'+
@@ -1975,33 +2077,35 @@ function detalleItem(g, it){
       '<div class="cel celda-est">'+celdaEstado(s.estado, g.id, it.id, s.id)+'</div>'+
       '<div><input class="fch-inp" type="date" value="'+esc(s.fecha||'')+'" '+
         'onchange="setSubAhora(\''+g.id+'\',\''+it.id+'\',\''+s.id+'\',\'fecha\',this.value)"></div>'+
+      '<div><button class="bg-com'+(nc?' hay':'')+(coms?' on':'')+'" '+
+        'onclick="toggleSubComs(\''+g.id+'\',\''+it.id+'\',\''+s.id+'\')" title="Comentarios del subítem">'+
+        (nc||'')+'&#128172;</button></div>'+
       '<div><button class="ico" onclick="delSub(\''+g.id+'\',\''+it.id+'\',\''+s.id+'\')" title="Borrar">&times;</button></div>'+
     '</div>';
+    if(coms){
+      h += '<div class="sub-coms">'+
+        cajaComentario('ncs-'+s.id,
+          'addComentarioSub(\''+g.id+'\',\''+it.id+'\',\''+s.id+'\')',
+          'addComentarioSub(\''+g.id+'\',\''+it.id+'\',\''+s.id+'\')',
+          'Comentario sobre "'+(s.texto.length>24?s.texto.slice(0,22)+'…':s.texto)+'"… usá @ para mencionar')+
+        listaComentarios(s.comentarios,
+          'delComentarioSub(\''+g.id+'\',\''+it.id+'\',\''+s.id+'\',\'%ID%\')')+
+      '</div>';
+    }
   });
   h += '<div class="sub-row sub-add">'+
       '<div><input class="sub-nuevo" id="ns-'+it.id+'" placeholder="+ Agregar subítem" '+
         'onkeydown="if(event.key===\'Enter\')addSub(\''+g.id+'\',\''+it.id+'\')"></div>'+
-      '<div></div><div></div><div></div><div></div>'+
+      '<div></div><div></div><div></div><div></div><div></div>'+
     '</div>';
   h += '</div>';
 
-  h += '<div class="upd-t">Actualizaciones <span>'+it.comentarios.length+'</span></div>';
-  h += '<div class="upd-nuevo">'+
-    '<span class="avatar yo">'+esc(inicialesDe(MAIL||'yo'))+'</span>'+
-    '<input class="inp" id="nc-'+it.id+'" placeholder="Escribí una actualización…" '+
-      'onkeydown="if(event.key===\'Enter\')addComentario(\''+g.id+'\',\''+it.id+'\')">'+
-    '<button class="btn-sm" onclick="addComentario(\''+g.id+'\',\''+it.id+'\')">Publicar</button></div>';
-  h += it.comentarios.length
-    ? '<div class="upds">'+it.comentarios.slice().reverse().map(c=>
-        '<div class="upd">'+
-          '<span class="avatar" style="background:'+colorDeNombre(c.autor||'yo')+'">'+esc(inicialesDe(c.autor||'yo'))+'</span>'+
-          '<div class="upd-cuerpo">'+
-            '<div class="upd-h"><b>'+esc(c.autor||'yo')+'</b><span>'+c.fecha+'</span>'+
-            '<button class="ico" onclick="delComentario(\''+g.id+'\',\''+it.id+'\',\''+c.id+'\')" title="Borrar">&times;</button></div>'+
-            '<div class="upd-tx">'+toHtml(c.texto)+'</div>'+
-          '</div>'+
-        '</div>').join('')+'</div>'
-    : '';
+  h += '<div class="upd-t">Comentarios del ítem <span>'+it.comentarios.length+'</span></div>';
+  h += cajaComentario('nc-'+it.id,
+    'addComentario(\''+g.id+'\',\''+it.id+'\')',
+    'addComentario(\''+g.id+'\',\''+it.id+'\')',
+    'Comentario general… usá @ para mencionar a alguien');
+  h += listaComentarios(it.comentarios, 'delComentario(\''+g.id+'\',\''+it.id+'\',\'%ID%\')');
   return h + '</div>';
 }
 
@@ -2423,6 +2527,7 @@ function buildResumen(){
         it.subitems.forEach(s=>{
           const se = estadoDe(s.estado);
           L.push('    · '+s.texto+' ['+(se?se.n:'—')+']'+(nombrePersona(s.resp)?' · '+nombrePersona(s.resp):''));
+          (s.comentarios||[]).slice(-1).forEach(c=> L.push('        💬 '+c.fecha+': '+linea(c.texto)));
         });
         it.comentarios.slice(-2).forEach(c=> L.push('    💬 '+c.fecha+': '+linea(c.texto)));
       });
@@ -2594,8 +2699,12 @@ function buscar(qRaw){
       const donde = g.nombre;
       if(nombreCoincide(it.texto))
         res.push({tipo:'Ítem', titulo:it.texto, ctx:donde, frag:'', tab:'resumen', orden:1});
-      (it.subitems||[]).forEach(s=>{ if(nombreCoincide(s.texto))
-        res.push({tipo:'Subítem', titulo:s.texto, ctx:donde+' › '+it.texto, frag:'', tab:'resumen', orden:1}); });
+      (it.subitems||[]).forEach(s=>{
+        if(nombreCoincide(s.texto))
+          res.push({tipo:'Subítem', titulo:s.texto, ctx:donde+' › '+it.texto, frag:'', tab:'resumen', orden:1});
+        (s.comentarios||[]).forEach(c=> pega(c.texto,
+          {tipo:'Comentario', titulo:s.texto, ctx:donde+' › '+it.texto+' · '+c.fecha, tab:'resumen', orden:2}));
+      });
       (it.comentarios||[]).forEach(c=> pega(c.texto,
         {tipo:'Comentario', titulo:it.texto, ctx:donde+' · '+c.fecha, tab:'resumen', orden:2}));
     });
