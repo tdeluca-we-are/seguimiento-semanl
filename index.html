@@ -443,10 +443,12 @@ td.cell{text-align:center;padding:6px 8px}
 /* ===== menús propios (estado, responsable, espacio) ===== */
 .cel{position:relative}
 .cel-btn{border:none;background:none;cursor:pointer;font-family:var(--font);padding:0}
-.menu{position:absolute;top:calc(100% + 5px);left:50%;transform:translateX(-50%);z-index:400;
-  background:#15294a;border:1px solid var(--border);border-radius:var(--radius-lg);
-  box-shadow:0 12px 34px rgba(0,0,0,.55);overflow:hidden;min-width:168px;padding:5px}
-.esp-sw .menu{left:0;transform:none;top:calc(100% + 8px);padding:4px}
+/* La capa vive al final del body: ningún contenedor con overflow la recorta. */
+#capa-menu{position:fixed;inset:0;z-index:600;pointer-events:none}
+#capa-menu .menu{pointer-events:auto}
+.menu{position:fixed;z-index:600;background:#15294a;border:1px solid var(--border);
+  border-radius:var(--radius-lg);box-shadow:0 14px 38px rgba(0,0,0,.6);min-width:168px;padding:5px;
+  max-height:70vh;overflow-y:auto}
 .menu-est{display:flex;flex-direction:column;gap:4px}
 .menu-est-i{border:none;border-radius:7px;cursor:pointer;color:#fff;font-family:var(--font);font-size:10.5px;
   font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:9px 12px;text-align:center}
@@ -796,6 +798,8 @@ mark{background:rgba(240,78,35,.28);color:#fff;border-radius:3px;padding:0 2px}
     <div class="modal-body" id="bus-body"></div>
   </div>
 </div>
+
+<div id="capa-menu"></div>
 
 <div class="viz-tip" id="viztip"></div>
 <div class="toast" id="toast"></div>
@@ -1298,15 +1302,10 @@ function render(){
     '<button onclick="volverAlMio()">Ir al mío</button></span>';
   // desplegable propio: se ve dónde estás, y el otro equipo está a un click
   document.getElementById('esp-sw').innerHTML =
-    '<button class="cel-btn esp-actual" style="--ec:'+colorEspacio()+'" onclick="abrirMenu(\'esp\')">'+
+    '<button class="cel-btn esp-actual" style="--ec:'+colorEspacio()+'" '+
+      'data-menu="'+claveMenu('esp','','','')+'" onclick="abrirMenu(\'esp\')">'+
       '<i></i>'+esc(S.nombre || RAIZ.activo)+'<b>&#9662;</b>'+
-    '</button>'+
-    (menuEs('esp','','','') ? '<div class="menu menu-esp">'+
-      ESPACIOS.map(e=>'<button class="menu-esp-i'+(e.k===RAIZ.activo?' act':'')+'" '+
-        'onclick="menu=null;cambiarEspacio(\''+e.k+'\')"><i style="background:'+e.c+'"></i>'+
-        esc(RAIZ.espacios[e.k].nombre || e.n)+
-        (e.k===RAIZ.activo?'<span>acá estás</span>':'')+'</button>').join('')+
-      '</div>' : '');
+    '</button>';
   document.documentElement.style.setProperty('--esp-color', colorEspacio());
   const lbl = document.getElementById('wklabel');
   const dif = semanasDeDiferencia(cur);
@@ -1327,6 +1326,7 @@ function render(){
     const el = pane.querySelector('.rich[data-k="'+foco+'"] .rich-body') || pane.querySelector('[data-k="'+foco+'"]');
     if(el){ el.focus(); if(el.classList.contains('rich-body')) placeCaretEnd(el); }
   }
+  pintarMenu();
 }
 
 /* ---------- llevar cualquier cosa al tablero (la función vive más abajo) ---------- */
@@ -1761,21 +1761,19 @@ function elegirPersona(gid, iid, sid, pid){
 }
 const menuEs = (tipo,gid,iid,sid) => !!(menu && menu.tipo===tipo && menu.gid===gid && menu.iid===iid && menu.sid===(sid||''));
 
-/* --- dibujo --- */
+/* --- dibujo ---
+   Los menús NO se dibujan dentro de la celda: las tarjetas de grupo y de
+   subítems recortan lo que se sale (overflow:hidden), y el desplegable
+   quedaba cortado. Van a una capa fija sobre todo, posicionada contra el
+   botón que lo abrió. */
+const claveMenu = (tipo,gid,iid,sid) => tipo+':'+(gid||'')+':'+(iid||'')+':'+(sid||'');
 function celdaEstado(estId, gid, iid, sid){
   const e = estadoDe(estId);
   const col = e ? e.c : 'transparent';
   const args = jsArg(gid)+','+jsArg(iid)+','+jsArg(sid||'');
-  let h = '<button class="cel-btn est-btn'+(e?'':' vacio')+'" style="background:'+col+'" '+
+  return '<button class="cel-btn est-btn'+(e?'':' vacio')+'" style="background:'+col+'" '+
+    'data-menu="'+claveMenu('est',gid,iid,sid)+'" '+
     'onclick="abrirMenu(\'est\','+args+')">'+(e ? esc(e.n) : '—')+'</button>';
-  if(menuEs('est', gid, iid, sid)){
-    h += '<div class="menu menu-est">'+
-      T().estados.map(x=>'<button class="menu-est-i" style="background:'+x.c+'" '+
-        'onclick="elegirEstado('+args+','+jsArg(x.id)+')">'+esc(x.n)+'</button>').join('')+
-      '<button class="menu-est-i vacio" onclick="elegirEstado('+args+',\'\')">Sin estado</button>'+
-    '</div>';
-  }
-  return h;
 }
 // color estable a partir del nombre, para que cada persona tenga siempre el suyo
 function colorDeNombre(n){
@@ -1786,25 +1784,65 @@ function colorDeNombre(n){
 /* Como en Monday: se ve un avatar con las iniciales, y el select va encima,
    transparente, para que el click abra la lista de siempre. */
 function celdaPersona(pid, gid, iid, sid){
-  const act = activos(S.personas);
   const nom = nombrePersona(pid);
   const args = jsArg(gid)+','+jsArg(iid)+','+jsArg(sid||'');
-  let h = '<button class="cel-btn per-btn" onclick="abrirMenu(\'per\','+args+')" title="'+(nom?esc(nom):'Sin asignar')+'">'+
+  return '<button class="cel-btn per-btn" data-menu="'+claveMenu('per',gid,iid,sid)+'" '+
+    'onclick="abrirMenu(\'per\','+args+')" title="'+(nom?esc(nom):'Sin asignar')+'">'+
     (nom ? '<span class="avatar" style="background:'+colorDeNombre(nom)+'">'+esc(inicialesDe(nom))+'</span>'
          : '<span class="avatar vacio">+</span>')+'</button>';
-  if(menuEs('per', gid, iid, sid)){
-    h += '<div class="menu menu-per">'+
-      (act.length ? act.map(p=>'<button class="menu-per-i'+(p.id===pid?' act':'')+'" '+
-        'onclick="elegirPersona('+args+','+jsArg(p.id)+')">'+
+}
+
+/* --- la capa de menús --- */
+function contenidoMenu(){
+  if(!menu) return '';
+  const args = jsArg(menu.gid)+','+jsArg(menu.iid)+','+jsArg(menu.sid);
+  if(menu.tipo === 'est'){
+    return '<div class="menu menu-est">'+
+      T().estados.map(x=>'<button class="menu-est-i" style="background:'+x.c+'" '+
+        'onclick="elegirEstado('+args+','+jsArg(x.id)+')">'+esc(x.n)+'</button>').join('')+
+      '<button class="menu-est-i vacio" onclick="elegirEstado('+args+',\'\')">Sin estado</button></div>';
+  }
+  if(menu.tipo === 'per'){
+    const act = activos(S.personas);
+    return '<div class="menu menu-per">'+
+      (act.length ? act.map(p=>'<button class="menu-per-i" onclick="elegirPersona('+args+','+jsArg(p.id)+')">'+
         '<span class="avatar" style="background:'+colorDeNombre(p.nombre)+'">'+esc(inicialesDe(p.nombre))+'</span>'+
         '<span class="menu-per-n">'+esc(p.nombre)+'</span></button>').join('')
         : '<div class="menu-vacio">Cargá el equipo en Personas</div>')+
       '<button class="menu-per-i" onclick="elegirPersona('+args+',\'\')">'+
-        '<span class="avatar vacio">–</span><span class="menu-per-n">Sin asignar</span></button>'+
-    '</div>';
+        '<span class="avatar vacio">–</span><span class="menu-per-n">Sin asignar</span></button></div>';
   }
-  return h;
+  if(menu.tipo === 'esp'){
+    return '<div class="menu menu-esp">'+
+      ESPACIOS.map(e=>'<button class="menu-esp-i'+(e.k===RAIZ.activo?' act':'')+'" '+
+        'onclick="menu=null;cambiarEspacio(\''+e.k+'\')"><i style="background:'+e.c+'"></i>'+
+        esc(RAIZ.espacios[e.k].nombre || e.n)+
+        (e.k===RAIZ.activo?'<span>acá estás</span>':'')+'</button>').join('')+'</div>';
+  }
+  return '';
 }
+function pintarMenu(){
+  const capa = document.getElementById('capa-menu');
+  if(!capa) return;
+  if(!menu){ capa.innerHTML = ''; return; }
+  const btn = document.querySelector('[data-menu="'+claveMenu(menu.tipo,menu.gid,menu.iid,menu.sid)+'"]');
+  if(!btn){ capa.innerHTML = ''; menu = null; return; }
+  capa.innerHTML = contenidoMenu();
+  const m = capa.firstElementChild;
+  if(!m) return;
+  const r = btn.getBoundingClientRect();
+  const ancho = m.offsetWidth, alto = m.offsetHeight;
+  let x = (menu.tipo === 'esp') ? r.left : (r.left + r.width/2 - ancho/2);
+  let y = r.bottom + 5;
+  if(x < 8) x = 8;
+  if(x + ancho > window.innerWidth - 8) x = window.innerWidth - ancho - 8;
+  if(y + alto > window.innerHeight - 8) y = Math.max(8, r.top - alto - 5);  // si no entra abajo, se abre arriba
+  m.style.left = x+'px';
+  m.style.top = y+'px';
+}
+// con la capa fija, al scrollear el menú quedaría flotando lejos de su celda
+window.addEventListener('scroll', ()=>{ if(menu) cerrarMenu(); }, true);
+window.addEventListener('resize', ()=>{ if(menu) cerrarMenu(); });
 function vTablero(){
   const t = T();
   let h = '<div class="section"><div class="section-hdr">'+
