@@ -525,9 +525,13 @@ td.cell{text-align:center;padding:6px 8px}
 .bg-row:hover .manija{opacity:1}
 .manija:active{cursor:grabbing}
 .bg-row.arrastrando{opacity:.35}
-.bg-row.drop-arriba{box-shadow:inset 0 3px 0 var(--orange)}
-.bg-row.drop-abajo{box-shadow:inset 0 -3px 0 var(--orange)}
+.bg-row.drop-arriba,.sub-row.drop-arriba{box-shadow:inset 0 3px 0 var(--orange)}
+.bg-row.drop-abajo,.sub-row.drop-abajo{box-shadow:inset 0 -3px 0 var(--orange)}
+.sub-row.arrastrando{opacity:.35}
+.sub-row:hover .manija{opacity:1}
+.sub-row .manija{font-size:11px}
 .bg-grupo.grupo-target{outline:2px dashed var(--gc);outline-offset:2px}
+.sub-card.card-target{outline:2px dashed var(--gc);outline-offset:1px}
 .bg-item{flex:1;min-width:0;background:transparent;border:1px solid transparent;border-radius:6px;color:var(--text);
   font-size:13px;font-weight:500;padding:5px 7px;outline:none;text-overflow:ellipsis}
 .bg-row:hover .bg-item{border-color:var(--border2)}
@@ -634,7 +638,10 @@ td.cell{text-align:center;padding:6px 8px}
 .upd-h span{font-size:10.5px;color:var(--text3);font-family:var(--code)}
 .upd-h .ico{margin-left:auto;opacity:0}
 .upd:hover .upd-h .ico{opacity:1}
-.upd-tx{font-size:12.5px;color:var(--text2);line-height:1.55}
+.upd-tx{font-size:13px;color:var(--text);line-height:1.6;overflow-wrap:anywhere;white-space:pre-wrap}
+.upd-tx .link{color:#8ab4f8;text-decoration:none;border-bottom:1px solid rgba(138,180,248,.35);
+  word-break:break-all}
+.upd-tx .link:hover{color:#aecbfa;border-bottom-color:currentColor}
 .col-inp{width:34px;height:28px;padding:2px;background:var(--bg3);border:1px solid var(--border2);
   border-radius:6px;cursor:pointer;flex:none}
 @media(max-width:900px){
@@ -1689,6 +1696,68 @@ function dropEnGrupo(ev, gid){
   ev.preventDefault();
   moverItem(arrastre, gid, null, true);
 }
+/* --- arrastrar subítems ---
+   Van por su propia variable: si compartieran la de ítems, soltar un subítem
+   sobre el grupo movería el ítem padre. */
+let arrastreSub = null;
+function dragStartSub(ev, gid, iid, sid){
+  ev.stopPropagation();
+  arrastreSub = {gid:gid, iid:iid, sid:sid};
+  const fila = ev.currentTarget.closest('.sub-row');
+  ev.dataTransfer.effectAllowed = 'move';
+  try{
+    ev.dataTransfer.setData('text/plain', sid);
+    if(fila) ev.dataTransfer.setDragImage(fila, 24, 16);
+  }catch(e){}
+  if(fila) setTimeout(()=>fila.classList.add('arrastrando'), 0);
+}
+function dragEndSub(){
+  arrastreSub = null; limpiarMarcas();
+  document.querySelectorAll('.arrastrando').forEach(e=>e.classList.remove('arrastrando'));
+}
+function dragSobreSub(ev, gid, iid, sid){
+  if(!arrastreSub || arrastreSub.sid === sid) return;
+  ev.preventDefault(); ev.stopPropagation();
+  ev.dataTransfer.dropEffect = 'move';
+  limpiarMarcas();
+  ev.currentTarget.classList.add(mitadDeAbajo(ev, ev.currentTarget) ? 'drop-abajo' : 'drop-arriba');
+}
+function dropEnSub(ev, gid, iid, sid){
+  if(!arrastreSub) return;
+  ev.preventDefault(); ev.stopPropagation();
+  moverSub(arrastreSub, gid, iid, sid, mitadDeAbajo(ev, ev.currentTarget));
+}
+function dragSobreCard(ev, gid, iid){
+  if(!arrastreSub) return;
+  ev.preventDefault(); ev.stopPropagation();
+  ev.dataTransfer.dropEffect = 'move';
+  limpiarMarcas();
+  ev.currentTarget.classList.add('card-target');
+}
+function dropEnCard(ev, gid, iid){
+  if(!arrastreSub) return;
+  ev.preventDefault(); ev.stopPropagation();
+  moverSub(arrastreSub, gid, iid, null, true);
+}
+function moverSub(origen, gidD, iidD, sidRef, despues){
+  limpiarMarcas();
+  if(sidRef && sidRef === origen.sid){ arrastreSub = null; return; }
+  const itO = findI(origen.gid, origen.iid), itD = findI(gidD, iidD);
+  if(!itO || !itD){ arrastreSub = null; return; }
+  const i = itO.subitems.findIndex(x=>x.id === origen.sid);
+  if(i < 0){ arrastreSub = null; return; }
+  const [s] = itO.subitems.splice(i, 1);
+  let pos = itD.subitems.length;
+  if(sidRef){
+    const r = itD.subitems.findIndex(x=>x.id === sidRef);
+    if(r >= 0) pos = r + (despues ? 1 : 0);
+  }
+  itD.subitems.splice(pos, 0, s);
+  if(itO !== itD) toast('"'+(s.texto.length>24?s.texto.slice(0,22)+'…':s.texto)+'" → '+itD.texto);
+  arrastreSub = null;
+  saveNow(); render();
+}
+
 function moverItem(origen, gidDestino, iidRef, despues){
   limpiarMarcas();
   if(iidRef && iidRef === origen.iid){ arrastre = null; return; }   // soltarlo sobre sí mismo no hace nada
@@ -1887,14 +1956,37 @@ function elegirMencion(nombre){
   cerrarMencion();
   el.focus(); el.setSelectionRange(pos, pos);
 }
+/* Un link pegado entero ocupaba cuatro renglones de texto gris ilegible.
+   Se convierte en un enlace clickeable con etiqueta corta (dominio + ruta). */
+function autolink(h){
+  return h.replace(/https?:\/\/[^\s<]+/g, function(u){
+    const href = u.replace(/&amp;/g, '&');
+    let label;
+    try{
+      const x = new URL(href);
+      label = x.hostname.replace(/^www\./,'') + (x.pathname.length > 1 ? x.pathname : '');
+    }catch(e){ label = href; }
+    if(label.length > 44) label = label.slice(0,42)+'…';
+    return '<a class="link" href="'+u+'" target="_blank" rel="noopener" title="'+u+'">'+esc(label)+'</a>';
+  });
+}
 // resalta los @Nombre que correspondan a alguien del equipo
 function conMenciones(txt){
-  let h = toHtml(txt);
+  let h = autolink(toHtml(txt));
   activos(S.personas).forEach(p=>{
     const n = p.nombre.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
     h = h.replace(new RegExp('@'+n+'\\b', 'gi'), '<span class="mencion">@'+esc(p.nombre)+'</span>');
   });
   return h;
+}
+// "2026-10-05" se lee peor que "hoy" o "5 oct"
+function fechaCorta(iso){
+  if(!iso) return '';
+  const hoy = isoDate(new Date());
+  if(iso === hoy) return 'hoy';
+  if(iso === isoDate(addDays(new Date(),-1))) return 'ayer';
+  const d = parseISO(iso);
+  return d.getDate()+' '+MESES[d.getMonth()]+(d.getFullYear() !== new Date().getFullYear() ? ' '+d.getFullYear() : '');
 }
 function cajaComentario(id, onEnter, onClick, ph){
   return '<div class="upd-nuevo">'+
@@ -1910,7 +2002,7 @@ function listaComentarios(coms, onBorrar){
     '<div class="upd">'+
       '<span class="avatar" style="background:'+colorDeNombre(c.autor||'yo')+'">'+esc(inicialesDe(c.autor||'yo'))+'</span>'+
       '<div class="upd-cuerpo">'+
-        '<div class="upd-h"><b>'+esc(c.autor||'yo')+'</b><span>'+c.fecha+'</span>'+
+        '<div class="upd-h"><b>'+esc(c.autor||'yo')+'</b><span title="'+esc(c.fecha)+'">'+fechaCorta(c.fecha)+'</span>'+
         '<button class="ico" onclick="'+onBorrar.replace('%ID%', c.id)+'" title="Borrar">&times;</button></div>'+
         '<div class="upd-tx">'+conMenciones(c.texto)+'</div>'+
       '</div>'+
@@ -2143,15 +2235,22 @@ function vTablero(){
 function detalleItem(g, it){
   let h = '<div class="bg-det" style="--gc:'+esc(g.color)+'">';
 
-  h += '<div class="sub-card">'+
+  h += '<div class="sub-card" ondragover="dragSobreCard(event,\''+g.id+'\',\''+it.id+'\')" '+
+      'ondrop="dropEnCard(event,\''+g.id+'\',\''+it.id+'\')" '+
+      'ondragleave="this.classList.remove(\'card-target\')">'+
     '<div class="sub-row sub-head">'+
       '<div>Subítem</div><div>Responsable</div><div>Estado</div><div>Fecha</div>'+
       '<div title="Comentarios">&#128172;</div><div></div>'+
     '</div>';
   it.subitems.forEach(s=>{
     const nc = (s.comentarios||[]).length;
-    h += '<div class="sub-row">'+
-      '<div><input class="bg-item" value="'+esc(s.texto)+'" placeholder="Subítem" '+
+    h += '<div class="sub-row" ondragover="dragSobreSub(event,\''+g.id+'\',\''+it.id+'\',\''+s.id+'\')" '+
+        'ondrop="dropEnSub(event,\''+g.id+'\',\''+it.id+'\',\''+s.id+'\')" '+
+        'ondragleave="this.classList.remove(\'drop-arriba\',\'drop-abajo\')">'+
+      '<div class="bg-tx">'+
+        '<span class="manija" draggable="true" title="Arrastrar para reordenar" '+
+          'ondragstart="dragStartSub(event,\''+g.id+'\',\''+it.id+'\',\''+s.id+'\')" ondragend="dragEndSub()">&#8942;&#8942;</span>'+
+        '<input class="bg-item" value="'+esc(s.texto)+'" placeholder="Subítem" '+
         'oninput="setSub(\''+g.id+'\',\''+it.id+'\',\''+s.id+'\',\'texto\',this.value)"></div>'+
       '<div class="cel">'+celdaPersona(s.resp, g.id, it.id, s.id)+'</div>'+
       '<div class="cel celda-est">'+celdaEstado(s.estado, g.id, it.id, s.id)+'</div>'+
